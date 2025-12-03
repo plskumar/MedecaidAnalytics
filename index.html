@@ -180,10 +180,12 @@
       font-size: 16px;
       font-weight: 600;
       cursor: pointer;
+      transition: color 0.15s ease;
     }
 
     .interop-value:hover {
       text-decoration: underline;
+      color: #a5b4fc;
     }
 
     .interop-chip-row {
@@ -435,9 +437,23 @@
       },
     ];
 
+    // All possible filters the numbers can apply
+    const FILTERS = {
+      ALL_UNMATCHED: "ALL_UNMATCHED",
+      ASSIGNED: "ASSIGNED",
+      ENCOUNTER_30D: "ENCOUNTER_30D",
+      REDETERMINATION_90D: "REDETERMINATION_90D",
+      MOVED_OUT_COUNTY: "MOVED_OUT_COUNTY",
+      NO_ENCOUNTER: "NO_ENCOUNTER",
+      MOVED_OUT_NETWORK: "MOVED_OUT_NETWORK",
+      PROGRAM_MEDICAID: "PROGRAM_MEDICAID",
+      PROGRAM_MEDICARE: "PROGRAM_MEDICARE",
+      PROGRAM_ACA: "PROGRAM_ACA",
+    };
+
     const App = () => {
-      const [selectedSection, setSelectedSection] = useState("unmatched"); // unmatched vs all
-      const [movementFilter, setMovementFilter] = useState("ALL"); // ALL | MOVED_OUT_COUNTY | NO_ENCOUNTER | MOVED_OUT_NETWORK | ASSIGNED | ENCOUNTER_30D | REDETERMINATION_90D
+      const [selectedSection, setSelectedSection] = useState("unmatched"); // unmatched vs all programs
+      const [activeFilter, setActiveFilter] = useState(FILTERS.ALL_UNMATCHED);
 
       const pieChartRef = useRef(null);
       const histChartRef = useRef(null);
@@ -464,49 +480,71 @@
         "Moved out of Network": 9,
       };
 
-      const mapMovementFilterLabel = (filter) => {
+      const filterLabel = (filter) => {
         switch (filter) {
-          case "MOVED_OUT_COUNTY":
+          case FILTERS.ASSIGNED:
+            return "Assigned Medicaid Members (sample)";
+          case FILTERS.ENCOUNTER_30D:
+            return "Members with Encounters in last 30 days (sample)";
+          case FILTERS.REDETERMINATION_90D:
+            return "Members with Redetermination in next 90 days (sample)";
+          case FILTERS.MOVED_OUT_COUNTY:
             return "Moved out of County";
-          case "NO_ENCOUNTER":
+          case FILTERS.NO_ENCOUNTER:
             return "No Encounter Yet";
-          case "MOVED_OUT_NETWORK":
+          case FILTERS.MOVED_OUT_NETWORK:
             return "Moved out of Network";
-          case "ENCOUNTER_30D":
-            return "Members with 30d Encounter (sample)";
-          case "REDETERMINATION_90D":
-            return "Members with 90d Redetermination (sample)";
-          case "ASSIGNED":
-            return "All Assigned Members (sample)";
+          case FILTERS.PROGRAM_MEDICAID:
+            return "Medicaid Program";
+          case FILTERS.PROGRAM_MEDICARE:
+            return "Medicare Program";
+          case FILTERS.PROGRAM_ACA:
+            return "ACA Program";
+          case FILTERS.ALL_UNMATCHED:
           default:
             return "All Unmatched Members";
         }
       };
 
-      const applyFilterToMembers = () => {
-        let baseList =
+      const filterMembers = () => {
+        // Base list: unmatched vs all programs
+        let list =
           selectedSection === "unmatched"
             ? mockMembers.filter((m) => m.program === "Medicaid")
             : mockMembers;
 
-        switch (movementFilter) {
-          case "MOVED_OUT_COUNTY":
-            return baseList.filter((m) => m.movementType === "Moved out of County");
-          case "NO_ENCOUNTER":
-            return baseList.filter((m) => m.movementType === "No Encounter Yet");
-          case "MOVED_OUT_NETWORK":
-            return baseList.filter((m) => m.movementType === "Moved out of Network");
-          // For ASSIGNED / ENCOUNTER_30D / REDETERMINATION_90D we’ll just show all Medicaid as a sample slice
-          case "ASSIGNED":
-          case "ENCOUNTER_30D":
-          case "REDETERMINATION_90D":
-            return baseList.filter((m) => m.program === "Medicaid");
+        switch (activeFilter) {
+          case FILTERS.ASSIGNED:
+          case FILTERS.ENCOUNTER_30D:
+          case FILTERS.REDETERMINATION_90D:
+            // For demo purposes, show Medicaid sample
+            return list.filter((m) => m.program === "Medicaid");
+
+          case FILTERS.MOVED_OUT_COUNTY:
+            return list.filter((m) => m.movementType === "Moved out of County");
+
+          case FILTERS.NO_ENCOUNTER:
+            return list.filter((m) => m.movementType === "No Encounter Yet");
+
+          case FILTERS.MOVED_OUT_NETWORK:
+            return list.filter((m) => m.movementType === "Moved out of Network");
+
+          case FILTERS.PROGRAM_MEDICAID:
+            return list.filter((m) => m.program === "Medicaid");
+
+          case FILTERS.PROGRAM_MEDICARE:
+            return list.filter((m) => m.program === "Medicare");
+
+          case FILTERS.PROGRAM_ACA:
+            return list.filter((m) => m.program === "ACA");
+
+          case FILTERS.ALL_UNMATCHED:
           default:
-            return baseList;
+            return list;
         }
       };
 
-      const filteredMembers = applyFilterToMembers();
+      const filteredMembers = filterMembers();
 
       useEffect(() => {
         if (!pieChartRef.current || !histChartRef.current) return;
@@ -575,16 +613,326 @@
           </header>
 
           <main className="content">
-            <h1 className="page-title">
-              Medicaid Member Dashboard
-            </h1>
+            <h1 className="page-title">Medicaid Member Dashboard</h1>
 
             <div className="grid">
-              {/* Section 1 */}
+              {/* Section 1: top metrics */}
               <section className="card col-span-4">
                 <div className="card-header">
                   <div>
                     <div className="card-title">Assigned Medicaid Membership</div>
                     <div className="card-subtitle">
-                      Click any tile to drill into the member list below
+                      Click any number below to update the member lists
                     </div>
+                  </div>
+                  <span className="badge">Section 1</span>
+                </div>
+
+                <div className="metrics-row">
+                  <div
+                    className={
+                      "metric-pill " +
+                      (activeFilter === FILTERS.ASSIGNED ? "active-filter" : "")
+                    }
+                    onClick={() => setActiveFilter(FILTERS.ASSIGNED)}
+                  >
+                    <div className="metric-label">Total Members</div>
+                    <div className="metric-value">
+                      {totalMedicaid.toLocaleString()}
+                    </div>
+                    <div className="metric-trend">
+                      Click to see assigned members
+                    </div>
+                  </div>
+
+                  <div
+                    className={
+                      "metric-pill " +
+                      (activeFilter === FILTERS.ENCOUNTER_30D ? "active-filter" : "")
+                    }
+                    onClick={() => setActiveFilter(FILTERS.ENCOUNTER_30D)}
+                  >
+                    <div className="metric-label">% with Encounters (30d)</div>
+                    <div className="metric-value">
+                      {encounterPct}%
+                    </div>
+                    <div className="metric-trend">
+                      Click to see 30d encounter sample
+                    </div>
+                  </div>
+
+                  <div
+                    className={
+                      "metric-pill " +
+                      (activeFilter === FILTERS.REDETERMINATION_90D ? "active-filter" : "")
+                    }
+                    onClick={() => setActiveFilter(FILTERS.REDETERMINATION_90D)}
+                  >
+                    <div className="metric-label">90d Redeterminations</div>
+                    <div className="metric-value">
+                      {redeterminations90d.toLocaleString()}
+                    </div>
+                    <div className="metric-trend">
+                      Click to see 90d redetermination sample
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 2: interop + main member list */}
+              <section className="card col-span-8">
+                <div className="card-header">
+                  <div>
+                    <div className="card-title">Interop Statistics</div>
+                    <div className="card-subtitle">
+                      Matching of unique CCDs with state CCDA files
+                    </div>
+                  </div>
+                  <span className="badge">Section 2</span>
+                </div>
+
+                <div className="Interop-grid">
+                  <div className="interop-stat">
+                    <div className="interop-label">Total Unique CCDAs</div>
+                    <div
+                      className="interop-value"
+                      onClick={() => setActiveFilter(FILTERS.ALL_UNMATCHED)}
+                      title="Click to show all unmatched members"
+                    >
+                      {totalUniqueCCDAs.toLocaleString()}
+                    </div>
+                    <div className="card-subtitle">
+                      Click to reset to all unmatched members
+                    </div>
+                  </div>
+
+                  <div className="interop-stat">
+                    <div className="interop-label">Unmatched CCDAs</div>
+                    <div
+                      className="interop-value"
+                      onClick={() => setActiveFilter(FILTERS.ALL_UNMATCHED)}
+                      title="Click to show all unmatched members"
+                    >
+                      {unmatchedCCDAs.toLocaleString()}
+                    </div>
+                    <div className="card-subtitle">
+                      Click to reset to all unmatched members
+                    </div>
+                  </div>
+
+                  <div className="interop-stat">
+                    <div className="interop-label">Unmatched by Program</div>
+                    <div className="interop-chip-row">
+                      <span
+                        className={
+                          "interop-chip " +
+                          (activeFilter === FILTERS.PROGRAM_MEDICARE
+                            ? "active-filter"
+                            : "")
+                        }
+                        onClick={() => setActiveFilter(FILTERS.PROGRAM_MEDICARE)}
+                      >
+                        Medicare: {unmatchedByProgram.Medicare}
+                      </span>
+                      <span
+                        className={
+                          "interop-chip " +
+                          (activeFilter === FILTERS.PROGRAM_ACA
+                            ? "active-filter"
+                            : "")
+                        }
+                        onClick={() => setActiveFilter(FILTERS.PROGRAM_ACA)}
+                      >
+                        ACA: {unmatchedByProgram.ACA}
+                      </span>
+                      <span
+                        className={
+                          "interop-chip " +
+                          (activeFilter === FILTERS.PROGRAM_MEDICAID
+                            ? "active-filter"
+                            : "")
+                        }
+                        onClick={() => setActiveFilter(FILTERS.PROGRAM_MEDICAID)}
+                      >
+                        Medicaid: {unmatchedByProgram.Medicaid}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="section-label">
+                  Unmatched Members · {filterLabel(activeFilter)}
+                </div>
+                <div className="tab-row">
+                  <button
+                    className={
+                      "tab-button " +
+                      (selectedSection === "unmatched" ? "active" : "")
+                    }
+                    onClick={() => setSelectedSection("unmatched")}
+                  >
+                    Unmatched Medicaid Members
+                  </button>
+                  <button
+                    className={
+                      "tab-button " +
+                      (selectedSection === "all" ? "active" : "")
+                    }
+                    onClick={() => setSelectedSection("all")}
+                  >
+                    All Programs
+                  </button>
+                </div>
+
+                <div className="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Member Name</th>
+                        <th>Member ID</th>
+                        <th>Enrollment Date</th>
+                        <th>Redetermination Date</th>
+                        <th>County</th>
+                        <th>Health Plan</th>
+                        <th>PCP</th>
+                        <th>Movement Type</th>
+                        <th>Program</th>
+                        <th>Engage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredMembers.map((m) => (
+                        <tr key={m.id}>
+                          <td>{m.name}</td>
+                          <td>{m.id}</td>
+                          <td>{m.enrollmentDate}</td>
+                          <td>{m.redeterminationDate}</td>
+                          <td>{m.county}</td>
+                          <td>{m.plan}</td>
+                          <td>{m.pcp}</td>
+                          <td>{m.movementType}</td>
+                          <td>
+                            <span className={"chip " + m.program.toLowerCase()}>
+                              {m.program}
+                            </span>
+                          </td>
+                          <td>
+                            {m.program === "Medicaid" ? (
+                              <button className="engage-button">Engage</button>
+                            ) : (
+                              <span style={{ fontSize: 11, color: "#6b7280" }}>
+                                N/A
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="charts-row">
+                  <div className="chart-card">
+                    <div className="chart-title">
+                      <span>Unmatched Members by Category</span>
+                    </div>
+                    <div className="chart-subtitle">
+                      Pie chart showing categories (visual only)
+                    </div>
+                    <canvas ref={pieChartRef} height="120"></canvas>
+                  </div>
+
+                  <div className="chart-card">
+                    <div className="chart-title">
+                      <span>Outreach Attempts Histogram</span>
+                    </div>
+                    <div className="chart-subtitle">
+                      Visual distribution by movement type
+                    </div>
+                    <canvas ref={histChartRef} height="120"></canvas>
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 3: SHOH index */}
+              <section className="card col-span-4">
+                <div className="card-header">
+                  <div>
+                    <div className="card-title">Aggregate SHOH Index</div>
+                    <div className="card-subtitle">
+                      Social, Health, Outreach & Housing composite score
+                    </div>
+                  </div>
+                  <span className="badge">Section 3</span>
+                </div>
+                <div className="metrics-row">
+                  <div className="metric-pill">
+                    <div className="metric-label">Current SHOH Index</div>
+                    <div className="metric-value">{(shohIndex * 100).toFixed(0)}%</div>
+                    <div className="metric-trend">Stable vs last quarter</div>
+                  </div>
+                </div>
+              </section>
+
+              {/* Section 4: full-screen list */}
+              <section className="card col-span-8">
+                <div className="card-header">
+                  <div>
+                    <div className="card-title">Unmatched Patients by Movement</div>
+                    <div className="card-subtitle">
+                      Full-screen style list · linked to the same controls above
+                    </div>
+                  </div>
+                  <span className="badge">Section 4</span>
+                </div>
+
+                <div className="section-label">
+                  Current filter · {filterLabel(activeFilter)}
+                </div>
+
+                <div className="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Member Name</th>
+                        <th>Member ID</th>
+                        <th>Movement Type</th>
+                        <th>County</th>
+                        <th>Plan</th>
+                        <th>Outreach Attempts</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredMembers.map((m) => (
+                        <tr key={m.id + "-bottom"}>
+                          <td>{m.name}</td>
+                          <td>{m.id}</td>
+                          <td>{m.movementType}</td>
+                          <td>{m.county}</td>
+                          <td>{m.plan}</td>
+                          <td>{m.outreachAttempts}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+
+            <footer className="page-footer">
+              <span>
+                <span className="highlight">Tip:</span> Every metric and count in Sections 1 and 2 is clickable — use them as controls
+                to drive both member lists.
+              </span>
+            </footer>
+          </main>
+        </div>
+      );
+    };
+
+    const rootElement = document.getElementById("root");
+    const root = ReactDOM.createRoot(rootElement);
+    root.render(<App />);
+  </script>
+</body>
+</html>
