@@ -114,6 +114,18 @@
       background: #020617;
       border: 1px solid #1f2937;
       min-width: 140px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .metric-pill:hover {
+      border-color: #4b5563;
+    }
+
+    .metric-pill.active-filter {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.35);
+      background: #020617;
     }
 
     .metric-label {
@@ -167,6 +179,33 @@
     .interop-value {
       font-size: 16px;
       font-weight: 600;
+      cursor: pointer;
+    }
+
+    .interop-value:hover {
+      text-decoration: underline;
+    }
+
+    .interop-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .interop-chip {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px dashed #374151;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .interop-chip.active-filter {
+      border-color: #22c55e;
+      background: #022c22;
     }
 
     .tab-row {
@@ -283,28 +322,6 @@
       margin-bottom: 6px;
     }
 
-    .legend-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 6px;
-      font-size: 10px;
-      color: #d1d5db;
-    }
-
-    .legend-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .legend-swatch {
-      width: 10px;
-      height: 10px;
-      border-radius: 3px;
-      background: #4b5563;
-    }
-
     .page-footer {
       margin-top: 20px;
       font-size: 11px;
@@ -419,7 +436,9 @@
     ];
 
     const App = () => {
-      const [selectedSection, setSelectedSection] = useState("unmatched");
+      const [selectedSection, setSelectedSection] = useState("unmatched"); // unmatched vs all
+      const [movementFilter, setMovementFilter] = useState("ALL"); // ALL | MOVED_OUT_COUNTY | NO_ENCOUNTER | MOVED_OUT_NETWORK | ASSIGNED | ENCOUNTER_30D | REDETERMINATION_90D
+
       const pieChartRef = useRef(null);
       const histChartRef = useRef(null);
       const pieInstance = useRef(null);
@@ -439,25 +458,61 @@
 
       const shohIndex = 0.73;
 
-      const unmatchedMedicaidMembers = mockMembers.filter(
-        (m) => m.program === "Medicaid"
-      );
-
       const histogramBuckets = {
         "Moved out of County": 14,
         "No Encounter Yet": 28,
         "Moved out of Network": 9,
       };
 
+      const mapMovementFilterLabel = (filter) => {
+        switch (filter) {
+          case "MOVED_OUT_COUNTY":
+            return "Moved out of County";
+          case "NO_ENCOUNTER":
+            return "No Encounter Yet";
+          case "MOVED_OUT_NETWORK":
+            return "Moved out of Network";
+          case "ENCOUNTER_30D":
+            return "Members with 30d Encounter (sample)";
+          case "REDETERMINATION_90D":
+            return "Members with 90d Redetermination (sample)";
+          case "ASSIGNED":
+            return "All Assigned Members (sample)";
+          default:
+            return "All Unmatched Members";
+        }
+      };
+
+      const applyFilterToMembers = () => {
+        let baseList =
+          selectedSection === "unmatched"
+            ? mockMembers.filter((m) => m.program === "Medicaid")
+            : mockMembers;
+
+        switch (movementFilter) {
+          case "MOVED_OUT_COUNTY":
+            return baseList.filter((m) => m.movementType === "Moved out of County");
+          case "NO_ENCOUNTER":
+            return baseList.filter((m) => m.movementType === "No Encounter Yet");
+          case "MOVED_OUT_NETWORK":
+            return baseList.filter((m) => m.movementType === "Moved out of Network");
+          // For ASSIGNED / ENCOUNTER_30D / REDETERMINATION_90D we’ll just show all Medicaid as a sample slice
+          case "ASSIGNED":
+          case "ENCOUNTER_30D":
+          case "REDETERMINATION_90D":
+            return baseList.filter((m) => m.program === "Medicaid");
+          default:
+            return baseList;
+        }
+      };
+
+      const filteredMembers = applyFilterToMembers();
+
       useEffect(() => {
         if (!pieChartRef.current || !histChartRef.current) return;
 
-        if (pieInstance.current) {
-          pieInstance.current.destroy();
-        }
-        if (histInstance.current) {
-          histInstance.current.destroy();
-        }
+        if (pieInstance.current) pieInstance.current.destroy();
+        if (histInstance.current) histInstance.current.destroy();
 
         const pieCtx = pieChartRef.current.getContext("2d");
         const histCtx = histChartRef.current.getContext("2d");
@@ -531,247 +586,5 @@
                   <div>
                     <div className="card-title">Assigned Medicaid Membership</div>
                     <div className="card-subtitle">
-                      Last 30 days of encounters & 90-day redeterminations
+                      Click any tile to drill into the member list below
                     </div>
-                  </div>
-                  <span className="badge">Section 1</span>
-                </div>
-
-                <div className="metrics-row">
-                  <div className="metric-pill">
-                    <div className="metric-label">Total Members</div>
-                    <div className="metric-value">
-                      {totalMedicaid.toLocaleString()}
-                    </div>
-                    <div className="metric-trend">
-                      +2.1% vs last month
-                    </div>
-                  </div>
-                  <div className="metric-pill">
-                    <div className="metric-label">% with Encounters (30d)</div>
-                    <div className="metric-value">
-                      {encounterPct}%
-                    </div>
-                    <div className="metric-trend">
-                      +4.3 pts vs last month
-                    </div>
-                  </div>
-                  <div className="metric-pill">
-                    <div className="metric-label">90d Redeterminations</div>
-                    <div className="metric-value">
-                      {redeterminations90d.toLocaleString()}
-                    </div>
-                    <div className="metric-trend">
-                      63 at risk for lapse
-                    </div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Section 2 */}
-              <section className="card col-span-8">
-                <div className="card-header">
-                  <div>
-                    <div className="card-title">Interop Statistics</div>
-                    <div className="card-subtitle">
-                      Matching of unique CCDs with state CCDA files
-                    </div>
-                  </div>
-                  <span className="badge">Section 2</span>
-                </div>
-
-                <div className="Interop-grid">
-                  <div className="interop-stat">
-                    <div className="interop-label">Total Unique CCDAs</div>
-                    <div className="interop-value">
-                      {totalUniqueCCDAs.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="interop-stat">
-                    <div className="interop-label">Unmatched CCDAs</div>
-                    <div className="interop-value">
-                      {unmatchedCCDAs.toLocaleString()}
-                    </div>
-                  </div>
-                  <div className="interop-stat">
-                    <div className="interop-label">Unmatched by Program</div>
-                    <div className="card-subtitle">
-                      Medicare: {unmatchedByProgram.Medicare} · ACA: {unmatchedByProgram.ACA} · Medicaid: {unmatchedByProgram.Medicaid}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="section-label">Unmatched Members</div>
-                <div className="tab-row">
-                  <button
-                    className={
-                      "tab-button " +
-                      (selectedSection === "unmatched" ? "active" : "")
-                    }
-                    onClick={() => setSelectedSection("unmatched")}
-                  >
-                    Unmatched Medicaid Members
-                  </button>
-                  <button
-                    className={
-                      "tab-button " +
-                      (selectedSection === "all" ? "active" : "")
-                    }
-                    onClick={() => setSelectedSection("all")}
-                  >
-                    All Programs
-                  </button>
-                </div>
-
-                <div className="table-container">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Member Name</th>
-                        <th>Member ID</th>
-                        <th>Enrollment Date</th>
-                        <th>Redetermination Date</th>
-                        <th>County</th>
-                        <th>Health Plan</th>
-                        <th>PCP</th>
-                        <th>Movement Type</th>
-                        <th>Program</th>
-                        <th>Engage</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {(selectedSection === "unmatched"
-                        ? unmatchedMedicaidMembers
-                        : mockMembers
-                      ).map((m) => (
-                        <tr key={m.id}>
-                          <td>{m.name}</td>
-                          <td>{m.id}</td>
-                          <td>{m.enrollmentDate}</td>
-                          <td>{m.redeterminationDate}</td>
-                          <td>{m.county}</td>
-                          <td>{m.plan}</td>
-                          <td>{m.pcp}</td>
-                          <td>{m.movementType}</td>
-                          <td>
-                            <span className={"chip " + m.program.toLowerCase()}>
-                              {m.program}
-                            </span>
-                          </td>
-                          <td>
-                            {m.program === "Medicaid" ? (
-                              <button className="engage-button">
-                                Engage
-                              </button>
-                            ) : (
-                              <span style={{ fontSize: 11, color: "#6b7280" }}>
-                                N/A
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="charts-row">
-                  <div className="chart-card">
-                    <div className="chart-title">
-                      <span>Unmatched Members by Category</span>
-                    </div>
-                    <div className="chart-subtitle">
-                      Pie chart showing distribution of unmatched Medicaid members
-                    </div>
-                    <canvas ref={pieChartRef} height="120"></canvas>
-                  </div>
-
-                  <div className="chart-card">
-                    <div className="chart-title">
-                      <span>Outreach Attempts Histogram</span>
-                    </div>
-                    <div className="chart-subtitle">
-                      Number of members reached out in each movement category
-                    </div>
-                    <canvas ref={histChartRef} height="120"></canvas>
-                  </div>
-                </div>
-              </section>
-
-              {/* Section 3 */}
-              <section className="card col-span-4">
-                <div className="card-header">
-                  <div>
-                    <div className="card-title">Aggregate SHOH Index</div>
-                    <div className="card-subtitle">
-                      Social, Health, Outreach & Housing composite score
-                    </div>
-                  </div>
-                  <span className="badge">Section 3</span>
-                </div>
-                <div className="metrics-row">
-                  <div className="metric-pill">
-                    <div className="metric-label">Current SHOH Index</div>
-                    <div className="metric-value">{(shohIndex * 100).toFixed(0)}%</div>
-                    <div className="metric-trend">Stable vs last quarter</div>
-                  </div>
-                </div>
-              </section>
-
-              {/* Section 4 */}
-              <section className="card col-span-8">
-                <div className="card-header">
-                  <div>
-                    <div className="card-title">Unmatched Patients by Movement</div>
-                    <div className="card-subtitle">
-                      Full-screen style member list for targeted outreach
-                    </div>
-                  </div>
-                  <span className="badge">Section 4</span>
-                </div>
-
-                <div className="table-container">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Member Name</th>
-                        <th>Member ID</th>
-                        <th>Movement Type</th>
-                        <th>County</th>
-                        <th>Plan</th>
-                        <th>Outreach Attempts</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockMembers.map((m) => (
-                        <tr key={m.id + "-bottom"}>
-                          <td>{m.name}</td>
-                          <td>{m.id}</td>
-                          <td>{m.movementType}</td>
-                          <td>{m.county}</td>
-                          <td>{m.plan}</td>
-                          <td>{m.outreachAttempts}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </section>
-            </div>
-
-            <footer className="page-footer">
-              <span>
-                <span className="highlight">Tip:</span> Share this page URL with your team to review Medicaid membership, redeterminations, and unmatched interop patients.
-              </span>
-            </footer>
-          </main>
-        </div>
-      );
-    };
-
-    const rootElement = document.getElementById("root");
-    const root = ReactDOM.createRoot(rootElement);
-    root.render(<App />);
-  </script>
-</body>
-</html>
