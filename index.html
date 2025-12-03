@@ -4,8 +4,646 @@
     <meta charset="UTF-8" />
     <title>Test Page</title>
   </head>
-  <body style="background:#111; color:#fff; font-family:sans-serif;">
-    <h1>Hello from GitHub Pages</h1>
-    <p>If you see this, Pages is working correctly.</p>
-  </body>
+  body {
+      background: #0f172a;
+      color: #e5e7eb;
+    }
+
+    .app-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .banner {
+      width: 100%;
+      height: 220px;
+      background-image: url("https://images.pexels.com/photos/6129681/pexels-photo-6129681.jpeg?auto=compress&cs=tinysrgb&w=1600");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .content {
+      padding: 16px 24px 32px 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-title {
+      margin-top: 16px;
+      margin-bottom: 20px;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: #020617;
+      border-radius: 18px;
+      padding: 16px 18px;
+      border: 1px solid #1f2937;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #e5e7eb;
+    }
+
+    .card-subtitle {
+      font-size: 12px;
+      color: #9ca3af;
+      margin-top: 4px;
+    }
+
+    .badge {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid #4b5563;
+      color: #d1d5db;
+    }
+
+    .metrics-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .metric-pill {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      min-width: 140px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .metric-pill:hover {
+      border-color: #4b5563;
+    }
+
+    .metric-pill.active {
+      border-color: #22c55e;
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.35);
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .metric-trend {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #6ee7b7;
+    }
+
+    .Interop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .interop-stat {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #020617;
+      border: 1px solid #1f2937;
+    }
+
+    .interop-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .interop-value {
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .interop-value:hover {
+      text-decoration: underline;
+      color: #a5b4fc;
+    }
+
+    .interop-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .interop-chip {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px dashed #374151;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .interop-chip.active {
+      border-color: #22c55e;
+      background: #022c22;
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .table-container {
+      margin-top: 10px;
+      max-height: 340px;
+      overflow: auto;
+      border-radius: 14px;
+      border: 1px solid #1f2937;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background: #020617;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+
+    th, td {
+      padding: 8px 10px;
+      text-align: left;
+      border-bottom: 1px solid #1f2937;
+      white-space: nowrap;
+    }
+
+    th {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    tr:nth-child(even) td {
+      background: #020617;
+    }
+
+    .chip {
+      display: inline-flex;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid #374151;
+      background: #020617;
+    }
+
+    .chip.medicaid { border-color: #22c55e; }
+    .chip.medicare { border-color: #38bdf8; }
+    .chip.aca { border-color: #f97316; }
+
+    .engage-button {
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #22c55e;
+      background: transparent;
+      color: #bbf7d0;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .page-footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .page-footer span.highlight {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(1, minmax(0,1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .col-span-4 { grid-column: span 4 / span 4; }
+      .col-span-8 { grid-column: span 8 / span 8; }
+      .col-span-12 { grid-column: span 12 / span 12; }
+    }
+
+    @media (max-width: 1023px) {
+      .col-span-4,
+      .col-span-8,
+      .col-span-12 {
+        grid-column: span 12 / span 12;
+      }
+      .banner {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="banner"></div>
+    </header>
+
+    <main class="content">
+      <h1 class="page-title">Medicaid Member Dashboard</h1>
+
+      <div class="grid">
+        <!-- Section 1 -->
+        <section class="card col-span-4">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Assigned Medicaid Membership</div>
+              <div class="card-subtitle">
+                Click any number to show the member list
+              </div>
+            </div>
+            <span class="badge">Section 1</span>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric-pill" data-control="total">
+              <div class="metric-label">Total Members</div>
+              <div class="metric-value" id="totalMembersValue">12,457</div>
+              <div class="metric-trend">Click to view member list</div>
+            </div>
+
+            <div class="metric-pill" data-control="enc30">
+              <div class="metric-label">% with Encounters (30d)</div>
+              <div class="metric-value" id="encounterPctValue">68.4%</div>
+              <div class="metric-trend">Click to view member list</div>
+            </div>
+
+            <div class="metric-pill" data-control="red90">
+              <div class="metric-label">90d Redeterminations</div>
+              <div class="metric-value" id="redeterminations90dValue">842</div>
+              <div class="metric-trend">Click to view member list</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="card col-span-8">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Interop Statistics</div>
+              <div class="card-subtitle">
+                Click any number to drive the same member list
+              </div>
+            </div>
+            <span class="badge">Section 2</span>
+          </div>
+
+          <div class="Interop-grid">
+            <div class="interop-stat">
+              <div class="interop-label">Total Unique CCDAs</div>
+              <div class="interop-value" data-control="ccda-total" id="totalCCDAsValue">
+                15,893
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched CCDAs</div>
+              <div class="interop-value" data-control="ccda-unmatched" id="unmatchedCCDAsValue">
+                1,376
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched by Program</div>
+              <div class="interop-chip-row">
+                <span class="interop-chip" data-control="prog-medicare">
+                  Medicare: 312
+                </span>
+                <span class="interop-chip" data-control="prog-aca">
+                  ACA: 289
+                </span>
+                <span class="interop-chip" data-control="prog-medicaid">
+                  Medicaid: 775
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">
+            Member list for: <span id="activeControlLabel">All members</span>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Member Name</th>
+                  <th>Member ID</th>
+                  <th>Enrollment Date</th>
+                  <th>Redetermination Date</th>
+                  <th>County</th>
+                  <th>Health Plan</th>
+                  <th>PCP</th>
+                  <th>Movement Type</th>
+                  <th>Program</th>
+                  <th>Engage</th>
+                </tr>
+              </thead>
+              <tbody id="topMemberTableBody">
+                <!-- rows inserted by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="card col-span-4">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aggregate SHOH Index</div>
+              <div class="card-subtitle">
+                Social, Health, Outreach & Housing composite score
+              </div>
+            </div>
+            <span class="badge">Section 3</span>
+          </div>
+          <div class="metrics-row">
+            <div class="metric-pill">
+              <div class="metric-label">Current SHOH Index</div>
+              <div class="metric-value">73%</div>
+              <div class="metric-trend">Stable vs last quarter</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="card col-span-8">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Unmatched Patients (Full List)</div>
+              <div class="card-subtitle">
+                Mirrors the same control selection above
+              </div>
+            </div>
+            <span class="badge">Section 4</span>
+          </div>
+
+          <div class="section-label">
+            Member list for: <span id="activeControlLabelBottom">All members</span>
+          </div>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Member Name</th>
+                  <th>Member ID</th>
+                  <th>Movement Type</th>
+                  <th>County</th>
+                  <th>Plan</th>
+                  <th>Outreach Attempts</th>
+                </tr>
+              </thead>
+              <tbody id="bottomMemberTableBody">
+                <!-- rows inserted by JS -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+
+      <footer class="page-footer">
+        <span>
+          <span class="highlight">Tip:</span> Click any KPI or count to drive the
+          member lists in Sections 2 and 4.
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const members = [
+      {
+        id: "M001",
+        name: "Ana Rodriguez",
+        enrollmentDate: "2023-04-12",
+        redeterminationDate: "2025-02-18",
+        county: "King",
+        plan: "Medicaid",
+        pcp: "Dr. Chang",
+        movementType: "Moved out of County",
+        program: "Medicaid",
+        outreachAttempts: 2,
+      },
+      {
+        id: "M002",
+        name: "James Clark",
+        enrollmentDate: "2022-11-03",
+        redeterminationDate: "2025-01-07",
+        county: "Pierce",
+        plan: "Medicaid",
+        pcp: "Dr. Shah",
+        movementType: "No Encounter Yet",
+        program: "Medicaid",
+        outreachAttempts: 1,
+      },
+      {
+        id: "M003",
+        name: "Maria Lopez",
+        enrollmentDate: "2024-02-19",
+        redeterminationDate: "2025-03-01",
+        county: "Snohomish",
+        plan: "Medicaid",
+        pcp: "Dr. Patel",
+        movementType: "Moved out of Network",
+        program: "Medicaid",
+        outreachAttempts: 3,
+      },
+      {
+        id: "M004",
+        name: "Robert Hill",
+        enrollmentDate: "2021-09-30",
+        redeterminationDate: "2025-04-10",
+        county: "King",
+        plan: "Medicare",
+        pcp: "Dr. Green",
+        movementType: "No Encounter Yet",
+        program: "Medicare",
+        outreachAttempts: 0,
+      },
+      {
+        id: "M005",
+        name: "Wei Chen",
+        enrollmentDate: "2023-07-11",
+        redeterminationDate: "2025-02-03",
+        county: "Pierce",
+        plan: "ACA",
+        pcp: "Dr. Singh",
+        movementType: "Moved out of County",
+        program: "ACA",
+        outreachAttempts: 1,
+      },
+    ];
+
+    const topBody = document.getElementById("topMemberTableBody");
+    const bottomBody = document.getElementById("bottomMemberTableBody");
+    const activeLabelTop = document.getElementById("activeControlLabel");
+    const activeLabelBottom = document.getElementById("activeControlLabelBottom");
+
+    function renderTables() {
+      topBody.innerHTML = "";
+      bottomBody.innerHTML = "";
+
+      members.forEach((m) => {
+        const trTop = document.createElement("tr");
+        trTop.innerHTML = `
+          <td>${m.name}</td>
+          <td>${m.id}</td>
+          <td>${m.enrollmentDate}</td>
+          <td>${m.redeterminationDate}</td>
+          <td>${m.county}</td>
+          <td>${m.plan}</td>
+          <td>${m.pcp}</td>
+          <td>${m.movementType}</td>
+          <td><span class="chip ${m.program.toLowerCase()}">${m.program}</span></td>
+          <td>${
+            m.program === "Medicaid"
+              ? '<button class="engage-button">Engage</button>'
+              : '<span style="font-size:11px;color:#6b7280;">N/A</span>'
+          }</td>
+        `;
+        topBody.appendChild(trTop);
+
+        const trBottom = document.createElement("tr");
+        trBottom.innerHTML = `
+          <td>${m.name}</td>
+          <td>${m.id}</td>
+          <td>${m.movementType}</td>
+          <td>${m.county}</td>
+          <td>${m.plan}</td>
+          <td>${m.outreachAttempts}</td>
+        `;
+        bottomBody.appendChild(trBottom);
+      });
+    }
+
+    function setActiveControl(label, key) {
+      activeLabelTop.textContent = label;
+      activeLabelBottom.textContent = label;
+
+      document
+        .querySelectorAll(".metric-pill, .interop-chip")
+        .forEach((el) => el.classList.remove("active"));
+
+      if (key) {
+        const el = document.querySelector(
+          `.metric-pill[data-control="${key}"], .interop-chip[data-control="${key}"]`
+        );
+        if (el) el.classList.add("active");
+      }
+    }
+
+    function initControls() {
+      document.querySelectorAll(".metric-pill").forEach((pill) => {
+        const key = pill.getAttribute("data-control");
+        pill.addEventListener("click", () => {
+          let label = "";
+          if (key === "total") {
+            label = "Total assigned Medicaid members";
+          } else if (key === "enc30") {
+            label = "Members with encounters in last 30 days (sample)";
+          } else if (key === "red90") {
+            label = "Members with redetermination in next 90 days (sample)";
+          } else {
+            label = "All members";
+          }
+          setActiveControl(label, key);
+        });
+      });
+
+      document.querySelectorAll(".interop-value").forEach((val) => {
+        const key = val.getAttribute("data-control");
+        val.addEventListener("click", () => {
+          let label = "";
+          if (key === "ccda-total") {
+            label = "Members associated with unique CCDAs (sample)";
+          } else if (key === "ccda-unmatched") {
+            label = "Members associated with unmatched CCDAs (sample)";
+          } else {
+            label = "All members";
+          }
+          setActiveControl(label, key);
+        });
+      });
+
+      document.querySelectorAll(".interop-chip").forEach((chip) => {
+        const key = chip.getAttribute("data-control");
+        chip.addEventListener("click", () => {
+          let label = "";
+          if (key === "prog-medicare") {
+            label = "Unmatched Medicare members (sample)";
+          } else if (key === "prog-aca") {
+            label = "Unmatched ACA members (sample)";
+          } else if (key === "prog-medicaid") {
+            label = "Unmatched Medicaid members (sample)";
+          } else {
+            label = "All members";
+          }
+          setActiveControl(label, key);
+        });
+      });
+    }
+
+    renderTables();
+    initControls();
+  </script>
+</body>
 </html>
