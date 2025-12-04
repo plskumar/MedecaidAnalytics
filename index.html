@@ -367,11 +367,11 @@
           </div>
         </section>
 
-        <!-- ROW 3: Interop Statistics -->
+        <!-- ROW 3: Interop Statistics (12 month) -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
-              <div class="card-title">Interop Statistics(12 Month) </div>
+              <div class="card-title">Interop Statistics (12 month)</div>
               <div class="card-subtitle">
                 Click any count to open a member list in a new window
               </div>
@@ -639,15 +639,15 @@
       doc.write(".export-btn{padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid #d1d5db;background:#f9fafb;color:#111827;cursor:pointer;}");
       doc.write(".export-btn:hover{background:#e5e7eb;}");
       doc.write(".table-wrapper{background:#ffffff;border-radius:12px;border:1px solid #d1d5db;overflow:auto;max-height:calc(100vh - 160px);}");
-      doc.write("table{width:100%;border-collapse:collapse;font-size:11px;}");
-      doc.write("th,td{padding:8px 10px;border-bottom:1px solid #e5e7eb;white-space:nowrap;text-align:left;}");
+      doc.write("table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}");
+      doc.write("th,td{padding:8px 10px;border-bottom:1px solid #e5e7eb;white-space:nowrap;text-align:left;overflow:hidden;text-overflow:ellipsis;}");
       doc.write("th{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;background:#f9fafb;position:sticky;top:0;z-index:5;}");
       doc.write("tr:nth-child(even) td{background:#f9fafb;}");
       doc.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #d1d5db;background:#f3f4f6;}");
       doc.write(".chip.medicaid{border-color:#22c55e;}");
       doc.write(".chip.medicare{border-color:#38bdf8;}");
       doc.write(".chip.aca{border-color:#f97316;}");
-      doc.write(".engage-cell{display:flex;align-items:center;gap:4px;}");
+      doc.write(".engage-cell{display:flex;align-items:center;justify-content:flex-end;gap:4px;max-width:120px;}");
       doc.write(".engage-status{font-size:14px;color:#16a34a;min-width:14px;text-align:center;}");
       doc.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:#ecfdf5;color:#166534;font-size:11px;cursor:pointer;}");
       doc.write(".engage-button:hover{background:#bbf7d0;}");
@@ -908,7 +908,6 @@
 
       buildPopupHTML(win.document, label, rows);
 
-      // Ensure handlers attach after load
       win.onload = function() {
         attachPopupHandlers(win);
       };
