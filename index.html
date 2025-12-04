@@ -15,8 +15,8 @@
     }
 
     body {
-      background: #0f172a;
-      color: #e5e7eb;
+      background: #e5e7eb; /* light gray background */
+      color: #111827;
     }
 
     .app-container {
@@ -50,6 +50,7 @@
       margin-bottom: 20px;
       font-size: 24px;
       font-weight: 600;
+      color: #020617;
     }
 
     .grid {
@@ -60,10 +61,11 @@
 
     .card {
       background: #020617;
+      color: #e5e7eb;
       border-radius: 18px;
       padding: 16px 18px;
       border: 1px solid #1f2937;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.45);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
     }
 
     .card-header {
@@ -226,7 +228,7 @@
     .page-footer {
       margin-top: 20px;
       font-size: 11px;
-      color: #6b7280;
+      color: #4b5563;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
@@ -234,7 +236,7 @@
     }
 
     .page-footer span.highlight {
-      color: #e5e7eb;
+      color: #111827;
       font-weight: 500;
     }
 
@@ -415,7 +417,7 @@
       <footer class="page-footer">
         <span>
           <span class="highlight">Tip:</span> Click any KPI or count to open a detailed member list
-          for outreach and review. Charts update visually based on a static sample.
+          for outreach and review. Use Engage in the popup to draft and send communication.
         </span>
       </footer>
     </main>
@@ -486,7 +488,7 @@
       }
     ];
 
-    // Simple chart sample data
+    // Chart sample data
     const movementBuckets = {
       "Moved out of County": 2,
       "No Encounter Yet": 2,
@@ -500,15 +502,14 @@
     };
 
     function getFilteredMembers(key) {
-      // Narrow by program keys; others just return all sample members
       if (key === "prog-medicare") {
-        return members.filter(function(m) { return m.program === "Medicare"; });
+        return members.filter(m => m.program === "Medicare");
       }
       if (key === "prog-aca") {
-        return members.filter(function(m) { return m.program === "ACA"; });
+        return members.filter(m => m.program === "ACA");
       }
       if (key === "prog-medicaid") {
-        return members.filter(function(m) { return m.program === "Medicaid"; });
+        return members.filter(m => m.program === "Medicaid");
       }
       // For all other KPIs, show all members as sample
       return members;
@@ -538,38 +539,64 @@
     }
 
     function openMemberWindow(key) {
-      var label = labelForKey(key);
-      var rows = getFilteredMembers(key);
+      const label = labelForKey(key);
+      const rows = getFilteredMembers(key);
 
-      var win = window.open("", "_blank", "width=1100,height=700");
+      // Try to open "maximized" (fills available screen)
+      const width = window.screen.availWidth || 1200;
+      const height = window.screen.availHeight || 800;
+      const specs = "left=0,top=0,width=" + width + ",height=" + height;
+
+      const win = window.open("", "_blank", specs);
       if (!win) {
         alert("Popup blocked. Please allow popups for this site.");
         return;
       }
 
+      // Build HTML for popup with Engage modal
       win.document.write("<!DOCTYPE html>");
       win.document.write("<html lang='en'><head>");
       win.document.write("<meta charset='UTF-8' />");
       win.document.write("<title>" + label + "</title>");
       win.document.write("<style>");
-      win.document.write("body{background:#020617;color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:20px;}");
-      win.document.write("h1{font-size:20px;margin-bottom:4px;}");
-      win.document.write("p{font-size:12px;color:#9ca3af;margin-bottom:16px;}");
+      win.document.write("body{background:#e5e7eb;color:#111827;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:20px;}");
+      win.document.write("h1{font-size:20px;margin-bottom:4px;color:#020617;}");
+      win.document.write("p{font-size:12px;color:#4b5563;margin-bottom:16px;}");
+      win.document.write(".table-wrapper{background:#ffffff;border-radius:12px;border:1px solid #d1d5db;overflow:auto;max-height:calc(100vh - 120px);}");
       win.document.write("table{width:100%;border-collapse:collapse;font-size:12px;}");
-      win.document.write("th,td{padding:8px 10px;border-bottom:1px solid #1f2937;white-space:nowrap;text-align:left;}");
-      win.document.write("th{font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;background:#020617;}");
-      win.document.write("tr:nth-child(even) td{background:#020617;}");
-      win.document.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #374151;background:#020617;}");
+      win.document.write("th,td{padding:8px 10px;border-bottom:1px solid #e5e7eb;white-space:nowrap;text-align:left;}");
+      win.document.write("th{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;background:#f9fafb;position:sticky;top:0;z-index:5;}");
+      win.document.write("tr:nth-child(even) td{background:#f9fafb;}");
+      win.document.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #d1d5db;background:#f3f4f6;}");
       win.document.write(".chip.medicaid{border-color:#22c55e;}");
       win.document.write(".chip.medicare{border-color:#38bdf8;}");
       win.document.write(".chip.aca{border-color:#f97316;}");
-      win.document.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:transparent;color:#bbf7d0;font-size:11px;cursor:pointer;}");
+      win.document.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:#ecfdf5;color:#166534;font-size:11px;cursor:pointer;}");
+      win.document.write(".engage-button:hover{background:#bbf7d0;}");
+      // Modal styles
+      win.document.write(".modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;}");
+      win.document.write(".modal{background:#ffffff;border-radius:14px;border:1px solid #d1d5db;max-width:520px;width:90%;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);}");
+      win.document.write(".modal-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#020617;}");
+      win.document.write(".modal-subtitle{font-size:12px;color:#4b5563;margin-bottom:10px;}");
+      win.document.write(".modal-textarea{width:100%;min-height:120px;border-radius:10px;border:1px solid #d1d5db;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;}");
+      win.document.write(".modal-textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 1px #2563eb33;}");
+      win.document.write(".modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}");
+      win.document.write(".btn-row{display:flex;gap:8px;}");
+      win.document.write(".btn{padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid transparent;cursor:pointer;}");
+      win.document.write(".btn-primary{background:#2563eb;color:#ffffff;border-color:#2563eb;}");
+      win.document.write(".btn-primary:hover{background:#1d4ed8;}");
+      win.document.write(".btn-secondary{background:#f3f4f6;color:#111827;border-color:#d1d5db;}");
+      win.document.write(".btn-secondary:hover{background:#e5e7eb;}");
+      win.document.write(".btn-ghost{background:transparent;color:#374151;border-color:#d1d5db;}");
+      win.document.write(".btn-ghost:hover{background:#f3f4f6;}");
       win.document.write("</style>");
       win.document.write("</head><body>");
 
       win.document.write("<h1>" + label + "</h1>");
-      win.document.write("<p>Sample member list driven by the KPI you clicked.</p>");
+      win.document.write("<p>Sample member list driven by the KPI you clicked. Click Engage to draft a communication.</p>");
 
+      // Table wrapper
+      win.document.write("<div class='table-wrapper'>");
       win.document.write("<table><thead><tr>");
       win.document.write("<th>Member Name</th>");
       win.document.write("<th>Member ID</th>");
@@ -595,32 +622,105 @@
         win.document.write("<td>" + m.movementType + "</td>");
         win.document.write("<td><span class='chip " + m.program.toLowerCase() + "'>" + m.program + "</span></td>");
         if (m.program === "Medicaid") {
-          win.document.write("<td><button class='engage-button'>Engage</button></td>");
+          win.document.write(
+            "<td><button class='engage-button' " +
+            "data-member-name='" + m.name.replace(/'/g, "&apos;") + "' " +
+            "data-member-id='" + m.id.replace(/'/g, "&apos;") + "' " +
+            "data-member-plan='" + m.plan.replace(/'/g, "&apos;") + "' " +
+            "data-member-county='" + m.county.replace(/'/g, "&apos;") + "' " +
+            "data-member-movement='" + m.movementType.replace(/'/g, "&apos;") + "'>Engage</button></td>"
+          );
         } else {
           win.document.write("<td><span style='font-size:11px;color:#6b7280;'>N/A</span></td>");
         }
         win.document.write("</tr>");
       });
 
-      win.document.write("</tbody></table>");
+      win.document.write("</tbody></table></div>");
+
+      // Modal structure
+      win.document.write("<div class='modal-backdrop' id='engageModalBackdrop'>");
+      win.document.write("  <div class='modal'>");
+      win.document.write("    <div class='modal-title' id='engageModalTitle'>Engage Member</div>");
+      win.document.write("    <div class='modal-subtitle' id='engageModalSubtitle'></div>");
+      win.document.write("    <textarea id='engageMessage' class='modal-textarea' placeholder='Type your message here...'></textarea>");
+      win.document.write("    <div class='modal-footer'>");
+      win.document.write("      <button class='btn btn-ghost' id='generateChatGPT'>Generate with ChatGPT</button>");
+      win.document.write("      <div class='btn-row'>");
+      win.document.write("        <button class='btn btn-secondary' id='cancelEngage'>Cancel</button>");
+      win.document.write("        <button class='btn btn-primary' id='sendEngage'>Send</button>");
+      win.document.write("      </div>");
+      win.document.write("    </div>");
+      win.document.write("  </div>");
+      win.document.write("</div>");
+
+      // Script inside popup for modal interaction
+      win.document.write("<script>");
+      win.document.write("  (function(){");
+      win.document.write("    var backdrop = document.getElementById('engageModalBackdrop');");
+      win.document.write("    var titleEl = document.getElementById('engageModalTitle');");
+      win.document.write("    var subtitleEl = document.getElementById('engageModalSubtitle');");
+      win.document.write("    var msgEl = document.getElementById('engageMessage');");
+      win.document.write("    var currentMemberName = null;");
+      win.document.write("    function openModalForButton(btn){");
+      win.document.write("      var name = btn.getAttribute('data-member-name');");
+      win.document.write("      var id = btn.getAttribute('data-member-id');");
+      win.document.write("      var plan = btn.getAttribute('data-member-plan');");
+      win.document.write("      var county = btn.getAttribute('data-member-county');");
+      win.document.write("      var movement = btn.getAttribute('data-member-movement');");
+      win.document.write("      currentMemberName = name;");
+      win.document.write("      titleEl.textContent = 'Engage ' + name;");
+      win.document.write("      subtitleEl.textContent = 'Member ID ' + id + ' · Plan ' + plan + ' · ' + county + ' · ' + movement;");
+      win.document.write("      msgEl.value = '';");
+      win.document.write("      backdrop.style.display = 'flex';");
+      win.document.write("    }");
+      win.document.write("    function closeModal(){");
+      win.document.write("      backdrop.style.display = 'none';");
+      win.document.write("    }");
+      win.document.write("    function generateChatGPTMessage(){");
+      win.document.write("      if(!currentMemberName){ return; }");
+      win.document.write("      // Simple local generation mimicking ChatGPT, based on member context");
+      win.document.write("      var base = 'Hello ' + currentMemberName + ',\\n\\n';");
+      win.document.write("      base += 'We are reaching out from your care team to ensure you stay covered and connected to care. ';");
+      win.document.write("      base += 'If you have recently moved, had a change in your coverage, or have not seen your provider in a while, we can help review your Medicaid benefits and schedule any needed appointments.\\n\\n';");
+      win.document.write("      base += 'You can call us at (XXX) XXX-XXXX or reply to this message so we can support you.\\n\\n';");
+      win.document.write("      base += 'Thank you,\\nYour Care Coordination Team';");
+      win.document.write("      msgEl.value = base;");
+      win.document.write("    }");
+      win.document.write("    function sendMessage(){");
+      win.document.write("      if(!currentMemberName){ closeModal(); return; }");
+      win.document.write("      closeModal();");
+      win.document.write("      var msg = 'Communication Sent to ' + currentMemberName; ");
+      win.document.write("      alert(msg);");
+      win.document.write("    }");
+      win.document.write("    document.getElementById('generateChatGPT').addEventListener('click', function(){ generateChatGPTMessage(); });");
+      win.document.write("    document.getElementById('cancelEngage').addEventListener('click', function(){ closeModal(); });");
+      win.document.write("    document.getElementById('sendEngage').addEventListener('click', function(){ sendMessage(); });");
+      win.document.write("    backdrop.addEventListener('click', function(e){ if(e.target === backdrop){ closeModal(); } });");
+      win.document.write("    // Attach to all engage buttons");
+      win.document.write("    var engageButtons = document.querySelectorAll('.engage-button');");
+      win.document.write("    engageButtons.forEach(function(btn){");
+      win.document.write("      btn.addEventListener('click', function(){ openModalForButton(btn); });");
+      win.document.write("    });");
+      win.document.write("  })();");
+      win.document.write("<\/script>");
+
       win.document.write("</body></html>");
       win.document.close();
     }
 
     function initKPIControls() {
       // Section 1 tiles
-      var metricPills = document.querySelectorAll(".metric-pill");
-      metricPills.forEach(function(pill) {
-        var key = pill.getAttribute("data-control");
+      document.querySelectorAll(".metric-pill").forEach(function(pill) {
+        const key = pill.getAttribute("data-control");
         pill.addEventListener("click", function() {
           openMemberWindow(key);
         });
       });
 
       // Interop numeric values
-      var interopValues = document.querySelectorAll(".interop-value");
-      interopValues.forEach(function(val) {
-        var key = val.getAttribute("data-control");
+      document.querySelectorAll(".interop-value").forEach(function(val) {
+        const key = val.getAttribute("data-control");
         if (!key) return;
         val.addEventListener("click", function() {
           openMemberWindow(key);
@@ -628,9 +728,8 @@
       });
 
       // Program chips
-      var chips = document.querySelectorAll(".interop-chip");
-      chips.forEach(function(chip) {
-        var key = chip.getAttribute("data-control");
+      document.querySelectorAll(".interop-chip").forEach(function(chip) {
+        const key = chip.getAttribute("data-control");
         chip.addEventListener("click", function() {
           openMemberWindow(key);
         });
@@ -638,14 +737,14 @@
     }
 
     function initCharts() {
-      var pieCanvas = document.getElementById("movementPie");
-      var barCanvas = document.getElementById("outreachBar");
+      const pieCanvas = document.getElementById("movementPie");
+      const barCanvas = document.getElementById("outreachBar");
       if (!pieCanvas || !barCanvas || !window.Chart) {
         return;
       }
 
-      var movementLabels = Object.keys(movementBuckets);
-      var movementData = movementLabels.map(function(k) { return movementBuckets[k]; });
+      const movementLabels = Object.keys(movementBuckets);
+      const movementData = movementLabels.map(k => movementBuckets[k]);
 
       new Chart(pieCanvas.getContext("2d"), {
         type: "pie",
@@ -669,8 +768,8 @@
         }
       });
 
-      var outreachLabels = Object.keys(outreachBuckets);
-      var outreachData = outreachLabels.map(function(k) { return outreachBuckets[k]; });
+      const outreachLabels = Object.keys(outreachBuckets);
+      const outreachData = outreachLabels.map(k => outreachBuckets[k]);
 
       new Chart(barCanvas.getContext("2d"), {
         type: "bar",
@@ -700,7 +799,6 @@
       });
     }
 
-    // Initialize everything after DOM is ready
     document.addEventListener("DOMContentLoaded", function() {
       initKPIControls();
       initCharts();
