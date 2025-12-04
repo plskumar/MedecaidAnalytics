@@ -15,7 +15,7 @@
     }
 
     body {
-      background: #e5e7eb; /* light gray background */
+      background: #e5e7eb;
       color: #111827;
     }
 
@@ -288,14 +288,10 @@
     }
 
     @media (min-width: 1024px) {
-      .col-span-4 { grid-column: span 4 / span 4; }
-      .col-span-8 { grid-column: span 8 / span 8; }
       .col-span-12 { grid-column: span 12 / span 12; }
     }
 
     @media (max-width: 1023px) {
-      .col-span-4,
-      .col-span-8,
       .col-span-12 {
         grid-column: span 12 / span 12;
       }
@@ -424,7 +420,7 @@
           </div>
         </section>
 
-        <!-- NEW ROW: Unmatched members from the state's list -->
+        <!-- ROW 4: Unmatched members from the state's list -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -505,7 +501,7 @@
   </div>
 
   <script>
-    // Mock member data
+    // ----- Data -----
     const members = [
       {
         id: "M001",
@@ -574,7 +570,6 @@
       }
     ];
 
-    // Chart sample data
     const movementBuckets = {
       "Moved out of County": 2,
       "No Encounter Yet": 2,
@@ -587,25 +582,16 @@
       "Moved out of Network": 3
     };
 
+    // ----- Helpers -----
     function getFilteredMembers(key) {
-      if (key === "prog-medicare") {
-        return members.filter(m => m.program === "Medicare");
-      }
-      if (key === "prog-aca") {
-        return members.filter(m => m.program === "ACA");
-      }
-      if (key === "prog-medicaid") {
-        return members.filter(m => m.program === "Medicaid");
-      }
-      if (key === "move-out-county") {
-        return members.filter(m => m.movementType === "Moved out of County");
-      }
-      if (key === "move-out-network") {
-        return members.filter(m => m.movementType === "Moved out of Network");
-      }
-      if (key === "no-encounter") {
-        return members.filter(m => m.movementType === "No Encounter Yet");
-      }
+      if (key === "prog-medicare") return members.filter(m => m.program === "Medicare");
+      if (key === "prog-aca") return members.filter(m => m.program === "ACA");
+      if (key === "prog-medicaid") return members.filter(m => m.program === "Medicaid");
+
+      if (key === "move-out-county") return members.filter(m => m.movementType === "Moved out of County");
+      if (key === "move-out-network") return members.filter(m => m.movementType === "Moved out of Network");
+      if (key === "no-encounter") return members.filter(m => m.movementType === "No Encounter Yet");
+
       // For all other KPIs, show all members as sample
       return members;
     }
@@ -639,9 +625,10 @@
       }
     }
 
+    // ----- Popup HTML -----
     function buildPopupHTML(doc, label, rows) {
-      doc.write("<!DOCTYPE html>");
-      doc.write("<html lang='en'><head>");
+      doc.open();
+      doc.write("<!DOCTYPE html><html lang='en'><head>");
       doc.write("<meta charset='UTF-8' />");
       doc.write("<title>" + label + "</title>");
       doc.write("<style>");
@@ -682,8 +669,7 @@
       doc.write(".btn-secondary:hover{background:#e5e7eb;}");
       doc.write(".btn-ghost{background:transparent;color:#374151;border-color:#d1d5db;}");
       doc.write(".btn-ghost:hover{background:#f3f4f6;}");
-      doc.write("</style>");
-      doc.write("</head><body>");
+      doc.write("</style></head><body>");
 
       doc.write("<h1>" + label + "</h1>");
       doc.write("<div class='top-actions'>");
@@ -691,8 +677,7 @@
       doc.write("<button id='exportCsv' class='export-btn'>Export CSV</button>");
       doc.write("</div>");
 
-      doc.write("<div class='table-wrapper'>");
-      doc.write("<table><thead><tr>");
+      doc.write("<div class='table-wrapper'><table><thead><tr>");
       doc.write("<th>Member Name</th>");
       doc.write("<th>Member ID</th>");
       doc.write("<th>Enrollment Date</th>");
@@ -740,7 +725,7 @@
 
       doc.write("</tbody></table></div>");
 
-      // Modal container
+      // Modal
       doc.write("<div class='modal-backdrop' id='engageModalBackdrop'>");
       doc.write("  <div class='modal'>");
       doc.write("    <div class='modal-title' id='engageModalTitle'>Engage Member</div>");
@@ -754,4 +739,261 @@
       doc.write("          <option value='Portal Message'>Portal Message</option>");
       doc.write("        </select>");
       doc.write("      </div>");
-     
+      doc.write("      <div>");
+      doc.write("        <label for='templateSelect'>Template</label>");
+      doc.write("        <select id='templateSelect' class='modal-select'>");
+      doc.write("          <option value='generic'>Generic Outreach</option>");
+      doc.write("          <option value='redetermination'>Redetermination Reminder</option>");
+      doc.write("          <option value='no-encounter'>No Encounter Follow-up</option>");
+      doc.write("        </select>");
+      doc.write("      </div>");
+      doc.write("    </div>");
+      doc.write("    <textarea id='engageMessage' class='modal-textarea' placeholder='Type your message here...'></textarea>");
+      doc.write("    <div class='modal-footer'>");
+      doc.write("      <button class='btn btn-ghost' id='generateChatGPT'>Generate with ChatGPT</button>");
+      doc.write("      <div class='btn-row'>");
+      doc.write("        <button class='btn btn-secondary' id='cancelEngage'>Cancel</button>");
+      doc.write("        <button class='btn btn-primary' id='sendEngage'>Send</button>");
+      doc.write("      </div>");
+      doc.write("    </div>");
+      doc.write("  </div>");
+      doc.write("</div>");
+
+      doc.write("</body></html>");
+      doc.close();
+    }
+
+    // ----- Popup behaviour -----
+    function attachPopupHandlers(win) {
+      const doc = win.document;
+      const backdrop = doc.getElementById("engageModalBackdrop");
+      const titleEl = doc.getElementById("engageModalTitle");
+      const subtitleEl = doc.getElementById("engageModalSubtitle");
+      const msgEl = doc.getElementById("engageMessage");
+      const btnGenerate = doc.getElementById("generateChatGPT");
+      const btnCancel = doc.getElementById("cancelEngage");
+      const btnSend = doc.getElementById("sendEngage");
+      const channelSelect = doc.getElementById("channelSelect");
+      const templateSelect = doc.getElementById("templateSelect");
+      const exportBtn = doc.getElementById("exportCsv");
+
+      let currentMemberName = null;
+      let currentRowEl = null;
+
+      function openModalForButton(btn) {
+        const row = btn.closest("tr");
+        currentRowEl = row;
+        const name = btn.getAttribute("data-member-name");
+        const id = btn.getAttribute("data-member-id");
+        const plan = btn.getAttribute("data-member-plan");
+        const county = btn.getAttribute("data-member-county");
+        const movement = btn.getAttribute("data-member-movement");
+        currentMemberName = name;
+        titleEl.textContent = "Engage " + name;
+        subtitleEl.textContent = "Member ID " + id + " · Plan " + plan + " · " + county + " · " + movement;
+        msgEl.value = "";
+        channelSelect.value = "Phone";
+        templateSelect.value = "generic";
+        backdrop.style.display = "flex";
+      }
+
+      function closeModal() {
+        backdrop.style.display = "none";
+      }
+
+      function generateChatGPTMessage() {
+        if (!currentMemberName) return;
+        const channel = channelSelect.value;
+        const template = templateSelect.value;
+
+        let intro = "Hello " + currentMemberName + ",\n\n";
+        let body = "";
+
+        if (template === "redetermination") {
+          body += "We are reaching out from your care team to remind you about your upcoming Medicaid redetermination. ";
+          body += "We want to make sure there are no gaps in your coverage and that you remain fully enrolled.\n\n";
+        } else if (template === "no-encounter") {
+          body += "We noticed that you have not had a recent visit with your primary care provider. ";
+          body += "We would like to help you schedule an appointment and review any care needs you may have.\n\n";
+        } else {
+          body += "We are reaching out from your care team to ensure you stay covered and connected to care. ";
+          body += "If you have recently moved, had a change in your coverage, or have questions about your benefits, we are here to help.\n\n";
+        }
+
+        body += "You can contact us via " + channel.toLowerCase() + " or call us at (XXX) XXX-XXXX so we can support you.\n\n";
+        const closing = "Thank you,\nYour Care Coordination Team";
+
+        msgEl.value = intro + body + closing;
+      }
+
+      function sendMessage() {
+        if (!currentMemberName || !currentRowEl) {
+          closeModal();
+          return;
+        }
+
+        const attemptsCell = currentRowEl.querySelector(".attempts-cell");
+        const lastOutreachCell = currentRowEl.querySelector(".last-outreach-cell");
+        const statusSpan = currentRowEl.querySelector(".engage-status");
+
+        const currentAttempts = parseInt(attemptsCell.textContent || "0", 10) || 0;
+        const newAttempts = currentAttempts + 1;
+        attemptsCell.textContent = String(newAttempts);
+        const now = new Date().toLocaleString();
+        lastOutreachCell.textContent = now;
+
+        if (statusSpan) statusSpan.textContent = "➤";
+
+        closeModal();
+        win.alert("Communication Sent to " + currentMemberName);
+      }
+
+      function exportCsv() {
+        const table = doc.querySelector("table");
+        if (!table) return;
+        const rowsEls = Array.from(table.querySelectorAll("tr"));
+        const csvRows = rowsEls.map(tr => {
+          const cells = Array.from(tr.querySelectorAll("th,td"));
+          return cells
+            .map(td => {
+              const text = td.innerText.replace(/\n/g, " ").trim();
+              return '"' + text.replace(/"/g, '""') + '"';
+            })
+            .join(",");
+        });
+        const csvContent = csvRows.join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = win.URL.createObjectURL(blob);
+        const a = doc.createElement("a");
+        a.href = url;
+        a.download = "member_list.csv";
+        doc.body.appendChild(a);
+        a.click();
+        doc.body.removeChild(a);
+        win.URL.revokeObjectURL(url);
+      }
+
+      if (btnGenerate) btnGenerate.addEventListener("click", generateChatGPTMessage);
+      if (btnCancel) btnCancel.addEventListener("click", closeModal);
+      if (btnSend) btnSend.addEventListener("click", sendMessage);
+      if (backdrop) {
+        backdrop.addEventListener("click", function(e) {
+          if (e.target === backdrop) closeModal();
+        });
+      }
+      if (exportBtn) exportBtn.addEventListener("click", exportCsv);
+
+      const engageButtons = doc.querySelectorAll(".engage-button");
+      engageButtons.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          openModalForButton(btn);
+        });
+      });
+    }
+
+    // ----- Open popup -----
+    function openMemberWindow(key) {
+      const label = labelForKey(key);
+      const rows = getFilteredMembers(key);
+
+      const width = window.screen.availWidth || 1200;
+      const height = window.screen.availHeight || 800;
+      const specs = "left=0,top=0,width=" + width + ",height=" + height;
+
+      const win = window.open("", "_blank", specs);
+      if (!win) {
+        alert("Popup blocked. Please allow popups for this site.");
+        return;
+      }
+
+      buildPopupHTML(win.document, label, rows);
+
+      // Ensure handlers attach after load
+      win.onload = function() {
+        attachPopupHandlers(win);
+      };
+    }
+
+    // ----- KPI Clicks -----
+    function initKPIControls() {
+      document.querySelectorAll(".metric-pill").forEach(function(pill) {
+        const key = pill.getAttribute("data-control");
+        if (!key) return;
+        pill.addEventListener("click", function() {
+          openMemberWindow(key);
+        });
+      });
+
+      document.querySelectorAll(".interop-value").forEach(function(val) {
+        const key = val.getAttribute("data-control");
+        if (!key) return;
+        val.addEventListener("click", function() {
+          openMemberWindow(key);
+        });
+      });
+    }
+
+    // ----- Charts -----
+    function initCharts() {
+      const pieCanvas = document.getElementById("movementPie");
+      const barCanvas = document.getElementById("outreachBar");
+      if (!pieCanvas || !barCanvas || !window.Chart) return;
+
+      const movementLabels = Object.keys(movementBuckets);
+      const movementData = movementLabels.map(k => movementBuckets[k]);
+
+      new Chart(pieCanvas.getContext("2d"), {
+        type: "pie",
+        data: {
+          labels: movementLabels,
+          datasets: [{ data: movementData }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: "#111827",
+                font: { size: 11 }
+              }
+            }
+          }
+        }
+      });
+
+      const outreachLabels = Object.keys(outreachBuckets);
+      const outreachData = outreachLabels.map(k => outreachBuckets[k]);
+
+      new Chart(barCanvas.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: outreachLabels,
+          datasets: [{ data: outreachData }]
+        },
+        options: {
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              ticks: { color: "#111827", font: { size: 11 } },
+              grid: { display: false }
+            },
+            y: {
+              ticks: { color: "#6b7280", font: { size: 10 } },
+              grid: { color: "#e5e7eb" }
+            }
+          },
+          plugins: {
+            legend: { display: false }
+          }
+        }
+      });
+    }
+
+    // ----- Init -----
+    document.addEventListener("DOMContentLoaded", function() {
+      initKPIControls();
+      initCharts();
+    });
+  </script>
+</body>
+</html>
