@@ -60,7 +60,7 @@
     }
 
     .card {
-      background: #ffffff; /* white cards on gray background */
+      background: #ffffff;
       color: #111827;
       border-radius: 18px;
       padding: 16px 18px;
@@ -128,12 +128,19 @@
       color: #16a34a;
     }
 
-    .Interop-grid {
+    /* Interop layout */
+    .Interop-primary-row {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
       margin-top: 8px;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
+    }
+
+    .Interop-secondary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
     }
 
     .interop-stat {
@@ -141,6 +148,11 @@
       border-radius: 12px;
       background: #f9fafb;
       border: 1px solid #e5e7eb;
+    }
+
+    .interop-stat-primary {
+      background: #eff6ff;
+      border-color: #bfdbfe;
     }
 
     .interop-label {
@@ -188,7 +200,7 @@
       height: 100%;
       border-radius: 999px;
       background: linear-gradient(90deg, #22c55e, #eab308);
-      width: 73%; /* same as index value */
+      width: 73%;
     }
 
     .shoh-metrics {
@@ -212,7 +224,6 @@
       border-radius: 14px;
       padding: 10px;
       border: 1px solid #e5e7eb;
-      /* constrain vertical size */
       height: 230px;
       display: flex;
       flex-direction: column;
@@ -268,6 +279,12 @@
       .charts-row {
         grid-template-columns: repeat(1, minmax(0, 1fr));
       }
+      .Interop-primary-row {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
+      .Interop-secondary-row {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+      }
     }
 
     @media (min-width: 1024px) {
@@ -298,7 +315,7 @@
       <h1 class="page-title">Medicaid Member Dashboard</h1>
 
       <div class="grid">
-        <!-- ROW 1: Assigned Medicaid Membership (full width) -->
+        <!-- ROW 1: Assigned Medicaid Membership -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -330,7 +347,7 @@
           </div>
         </section>
 
-        <!-- ROW 2: SDOH / SHOH full-width -->
+        <!-- ROW 2: SDOH / SHOH -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -354,7 +371,7 @@
           </div>
         </section>
 
-        <!-- ROW 3: Interop Statistics full width -->
+        <!-- ROW 3: Interop Statistics -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -365,22 +382,25 @@
             </div>
           </div>
 
-          <div class="Interop-grid">
-            <div class="interop-stat">
+          <!-- Top row: Total CCDAs & Unmatched CCDAs -->
+          <div class="Interop-primary-row">
+            <div class="interop-stat interop-stat-primary">
               <div class="interop-label">Total Unique CCDAs</div>
               <div class="interop-value" data-control="ccda-total">
                 15,893
               </div>
             </div>
 
-            <div class="interop-stat">
+            <div class="interop-stat interop-stat-primary">
               <div class="interop-label">Unmatched CCDAs</div>
               <div class="interop-value" data-control="ccda-unmatched">
                 1,376
               </div>
             </div>
+          </div>
 
-            <!-- Unmatched by Program, each as its own stat like Unmatched CCDAs -->
+          <!-- Second row: Unmatched by Program -->
+          <div class="Interop-secondary-row">
             <div class="interop-stat">
               <div class="interop-label">Unmatched Medicare</div>
               <div class="interop-value" data-control="prog-medicare">
@@ -404,7 +424,39 @@
           </div>
         </section>
 
-        <!-- ROW 4: Charts at bottom -->
+        <!-- NEW ROW: Unmatched members from the state's list -->
+        <section class="card col-span-12">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Unmatched members from the state's list</div>
+              <div class="card-subtitle">
+                Movement-based reasons for members on the state roster but not aligned to your panel
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric-pill" data-control="move-out-county">
+              <div class="metric-label">Moved out of County</div>
+              <div class="metric-value">314</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+
+            <div class="metric-pill" data-control="move-out-network">
+              <div class="metric-label">Moved out of Network</div>
+              <div class="metric-value">221</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+
+            <div class="metric-pill" data-control="no-encounter">
+              <div class="metric-label">No Encounters Yet</div>
+              <div class="metric-value">841</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ROW 5: Charts -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -545,6 +597,15 @@
       if (key === "prog-medicaid") {
         return members.filter(m => m.program === "Medicaid");
       }
+      if (key === "move-out-county") {
+        return members.filter(m => m.movementType === "Moved out of County");
+      }
+      if (key === "move-out-network") {
+        return members.filter(m => m.movementType === "Moved out of Network");
+      }
+      if (key === "no-encounter") {
+        return members.filter(m => m.movementType === "No Encounter Yet");
+      }
       // For all other KPIs, show all members as sample
       return members;
     }
@@ -567,6 +628,12 @@
           return "Unmatched ACA members (sample)";
         case "prog-medicaid":
           return "Unmatched Medicaid members (sample)";
+        case "move-out-county":
+          return "Unmatched members - Moved out of County (sample)";
+        case "move-out-network":
+          return "Unmatched members - Moved out of Network (sample)";
+        case "no-encounter":
+          return "Unmatched members - No Encounters Yet (sample)";
         default:
           return "Member list";
       }
@@ -593,9 +660,10 @@
       doc.write(".chip.medicaid{border-color:#22c55e;}");
       doc.write(".chip.medicare{border-color:#38bdf8;}");
       doc.write(".chip.aca{border-color:#f97316;}");
+      doc.write(".engage-cell{display:flex;align-items:center;gap:4px;}");
+      doc.write(".engage-status{font-size:14px;color:#16a34a;min-width:14px;text-align:center;}");
       doc.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:#ecfdf5;color:#166534;font-size:11px;cursor:pointer;}");
       doc.write(".engage-button:hover{background:#bbf7d0;}");
-      // Modal styles
       doc.write(".modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;}");
       doc.write(".modal{background:#ffffff;border-radius:14px;border:1px solid #d1d5db;max-width:560px;width:90%;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);}");
       doc.write(".modal-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#020617;}");
@@ -653,14 +721,17 @@
         doc.write("<td class='last-outreach-cell'>" + (m.lastOutreach || "—") + "</td>");
         doc.write("<td class='attempts-cell'>" + (m.outreachAttempts || 0) + "</td>");
         if (m.program === "Medicaid") {
+          doc.write("<td class='engage-cell'>");
+          doc.write("<span class='engage-status'></span>");
           doc.write(
-            "<td><button class='engage-button' " +
+            "<button class='engage-button' " +
             "data-member-name='" + m.name.replace(/'/g, "&apos;") + "' " +
             "data-member-id='" + m.id.replace(/'/g, "&apos;") + "' " +
             "data-member-plan='" + m.plan.replace(/'/g, "&apos;") + "' " +
             "data-member-county='" + m.county.replace(/'/g, "&apos;") + "' " +
-            "data-member-movement='" + m.movementType.replace(/'/g, "&apos;") + "'>Engage</button></td>"
+            "data-member-movement='" + m.movementType.replace(/'/g, "&apos;") + "'>Engage</button>"
           );
+          doc.write("</td>");
         } else {
           doc.write("<td><span style='font-size:11px;color:#6b7280;'>N/A</span></td>");
         }
@@ -683,257 +754,4 @@
       doc.write("          <option value='Portal Message'>Portal Message</option>");
       doc.write("        </select>");
       doc.write("      </div>");
-      doc.write("      <div>");
-      doc.write("        <label for='templateSelect'>Template</label>");
-      doc.write("        <select id='templateSelect' class='modal-select'>");
-      doc.write("          <option value='generic'>Generic Outreach</option>");
-      doc.write("          <option value='redetermination'>Redetermination Reminder</option>");
-      doc.write("          <option value='no-encounter'>No Encounter Follow-up</option>");
-      doc.write("        </select>");
-      doc.write("      </div>");
-      doc.write("    </div>");
-      doc.write("    <textarea id='engageMessage' class='modal-textarea' placeholder='Type your message here...'></textarea>");
-      doc.write("    <div class='modal-footer'>");
-      doc.write("      <button class='btn btn-ghost' id='generateChatGPT'>Generate with ChatGPT</button>");
-      doc.write("      <div class='btn-row'>");
-      doc.write("        <button class='btn btn-secondary' id='cancelEngage'>Cancel</button>");
-      doc.write("        <button class='btn btn-primary' id='sendEngage'>Send</button>");
-      doc.write("      </div>");
-      doc.write("    </div>");
-      doc.write("  </div>");
-      doc.write("</div>");
-
-      doc.write("</body></html>");
-    }
-
-    function attachPopupHandlers(win) {
-      const doc = win.document;
-      const backdrop = doc.getElementById("engageModalBackdrop");
-      const titleEl = doc.getElementById("engageModalTitle");
-      const subtitleEl = doc.getElementById("engageModalSubtitle");
-      const msgEl = doc.getElementById("engageMessage");
-      const btnGenerate = doc.getElementById("generateChatGPT");
-      const btnCancel = doc.getElementById("cancelEngage");
-      const btnSend = doc.getElementById("sendEngage");
-      const channelSelect = doc.getElementById("channelSelect");
-      const templateSelect = doc.getElementById("templateSelect");
-      const exportBtn = doc.getElementById("exportCsv");
-
-      let currentMemberName = null;
-      let currentRowEl = null;
-
-      function openModalForButton(btn) {
-        const row = btn.closest("tr");
-        currentRowEl = row;
-        const name = btn.getAttribute("data-member-name");
-        const id = btn.getAttribute("data-member-id");
-        const plan = btn.getAttribute("data-member-plan");
-        const county = btn.getAttribute("data-member-county");
-        const movement = btn.getAttribute("data-member-movement");
-        currentMemberName = name;
-        titleEl.textContent = "Engage " + name;
-        subtitleEl.textContent = "Member ID " + id + " · Plan " + plan + " · " + county + " · " + movement;
-        msgEl.value = "";
-        channelSelect.value = "Phone";
-        templateSelect.value = "generic";
-        backdrop.style.display = "flex";
-      }
-
-      function closeModal() {
-        backdrop.style.display = "none";
-      }
-
-      function generateChatGPTMessage() {
-        if (!currentMemberName) return;
-        const channel = channelSelect.value;
-        const template = templateSelect.value;
-
-        let intro = "Hello " + currentMemberName + ",\n\n";
-        let body = "";
-
-        if (template === "redetermination") {
-          body += "We are reaching out from your care team to remind you about your upcoming Medicaid redetermination. ";
-          body += "We want to make sure there are no gaps in your coverage and that you remain fully enrolled.\n\n";
-        } else if (template === "no-encounter") {
-          body += "We noticed that you have not had a recent visit with your primary care provider. ";
-          body += "We would like to help you schedule an appointment and review any care needs you may have.\n\n";
-        } else {
-          body += "We are reaching out from your care team to ensure you stay covered and connected to care. ";
-          body += "If you have recently moved, had a change in your coverage, or have questions about your benefits, we are here to help.\n\n";
-        }
-
-        body += "You can contact us via " + channel.toLowerCase() + " or call us at (XXX) XXX-XXXX so we can support you.\n\n";
-        const closing = "Thank you,\nYour Care Coordination Team";
-
-        msgEl.value = intro + body + closing;
-      }
-
-      function sendMessage() {
-        if (!currentMemberName || !currentRowEl) {
-          closeModal();
-          return;
-        }
-
-        const attemptsCell = currentRowEl.querySelector(".attempts-cell");
-        const lastOutreachCell = currentRowEl.querySelector(".last-outreach-cell");
-        const currentAttempts = parseInt(attemptsCell.textContent || "0", 10) || 0;
-        const newAttempts = currentAttempts + 1;
-        attemptsCell.textContent = String(newAttempts);
-        const now = new Date().toLocaleString();
-        lastOutreachCell.textContent = now;
-
-        closeModal();
-        win.alert("Communication Sent to " + currentMemberName);
-      }
-
-      function exportCsv() {
-        const table = doc.querySelector("table");
-        if (!table) return;
-        const rowsEls = Array.from(table.querySelectorAll("tr"));
-        const csvRows = rowsEls.map(tr => {
-          const cells = Array.from(tr.querySelectorAll("th,td"));
-          return cells
-            .map(td => {
-              const text = td.innerText.replace(/\n/g, " ").trim();
-              return '"' + text.replace(/"/g, '""') + '"';
-            })
-            .join(",");
-        });
-        const csvContent = csvRows.join("\n");
-        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-        const url = win.URL.createObjectURL(blob);
-        const a = doc.createElement("a");
-        a.href = url;
-        a.download = "member_list.csv";
-        doc.body.appendChild(a);
-        a.click();
-        doc.body.removeChild(a);
-        win.URL.revokeObjectURL(url);
-      }
-
-      if (btnGenerate) btnGenerate.addEventListener("click", generateChatGPTMessage);
-      if (btnCancel) btnCancel.addEventListener("click", closeModal);
-      if (btnSend) btnSend.addEventListener("click", sendMessage);
-      if (backdrop) {
-        backdrop.addEventListener("click", function(e) {
-          if (e.target === backdrop) closeModal();
-        });
-      }
-      if (exportBtn) exportBtn.addEventListener("click", exportCsv);
-
-      const engageButtons = doc.querySelectorAll(".engage-button");
-      engageButtons.forEach(function(btn) {
-        btn.addEventListener("click", function() {
-          openModalForButton(btn);
-        });
-      });
-    }
-
-    function openMemberWindow(key) {
-      const label = labelForKey(key);
-      const rows = getFilteredMembers(key);
-
-      const width = window.screen.availWidth || 1200;
-      const height = window.screen.availHeight || 800;
-      const specs = "left=0,top=0,width=" + width + ",height=" + height;
-
-      const win = window.open("", "_blank", specs);
-      if (!win) {
-        alert("Popup blocked. Please allow popups for this site.");
-        return;
-      }
-
-      buildPopupHTML(win.document, label, rows);
-      win.document.close();
-      attachPopupHandlers(win);
-    }
-
-    function initKPIControls() {
-      document.querySelectorAll(".metric-pill").forEach(function(pill) {
-        const key = pill.getAttribute("data-control");
-        pill.addEventListener("click", function() {
-          openMemberWindow(key);
-        });
-      });
-
-      document.querySelectorAll(".interop-value").forEach(function(val) {
-        const key = val.getAttribute("data-control");
-        if (!key) return;
-        val.addEventListener("click", function() {
-          openMemberWindow(key);
-        });
-      });
-    }
-
-    function initCharts() {
-      const pieCanvas = document.getElementById("movementPie");
-      const barCanvas = document.getElementById("outreachBar");
-      if (!pieCanvas || !barCanvas || !window.Chart) {
-        return;
-      }
-
-      const movementLabels = Object.keys(movementBuckets);
-      const movementData = movementLabels.map(k => movementBuckets[k]);
-
-      new Chart(pieCanvas.getContext("2d"), {
-        type: "pie",
-        data: {
-          labels: movementLabels,
-          datasets: [
-            {
-              data: movementData
-            }
-          ]
-        },
-        options: {
-          maintainAspectRatio: false,
-          plugins: {
-            legend: {
-              labels: {
-                color: "#111827",
-                font: { size: 11 }
-              }
-            }
-          }
-        }
-      });
-
-      const outreachLabels = Object.keys(outreachBuckets);
-      const outreachData = outreachLabels.map(k => outreachBuckets[k]);
-
-      new Chart(barCanvas.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels: outreachLabels,
-          datasets: [
-            {
-              data: outreachData
-            }
-          ]
-        },
-        options: {
-          maintainAspectRatio: false,
-          scales: {
-            x: {
-              ticks: { color: "#111827", font: { size: 11 } },
-              grid: { display: false }
-            },
-            y: {
-              ticks: { color: "#6b7280", font: { size: 10 } },
-              grid: { color: "#e5e7eb" }
-            }
-          },
-          plugins: {
-            legend: { display: false }
-          }
-        }
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-      initKPIControls();
-      initCharts();
-    });
-  </script>
-</body>
-</html>
+     
