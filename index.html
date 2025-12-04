@@ -87,15 +87,6 @@
       margin-top: 4px;
     }
 
-    .badge {
-      font-size: 11px;
-      border-radius: 999px;
-      padding: 4px 10px;
-      border: 1px solid #9ca3af;
-      color: #4b5563;
-      background: #f3f4f6;
-    }
-
     .metrics-row {
       display: flex;
       gap: 16px;
@@ -139,7 +130,7 @@
 
     .Interop-grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 10px;
       margin-top: 8px;
       margin-bottom: 10px;
@@ -171,63 +162,11 @@
       color: #2563eb;
     }
 
-    .interop-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .interop-chip {
-      font-size: 10px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      border: 1px dashed #9ca3af;
-      color: #111827;
-      background: #f3f4f6;
-      cursor: pointer;
-      transition: border-color 0.15s ease, background 0.15s ease;
-    }
-
-    .interop-chip:hover {
-      border-color: #2563eb;
-      background: #e0f2fe;
-    }
-
     .section-label {
       font-size: 11px;
       color: #6b7280;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 6px;
-    }
-
-    .charts-row {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 10px;
-    }
-
-    .chart-card {
-      background: #f9fafb;
-      border-radius: 14px;
-      padding: 10px;
-      border: 1px solid #e5e7eb;
-    }
-
-    .chart-title {
-      font-size: 12px;
-      color: #111827;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .chart-subtitle {
-      font-size: 11px;
-      color: #6b7280;
       margin-bottom: 6px;
     }
 
@@ -258,6 +197,53 @@
       margin-top: 6px;
       font-size: 11px;
       color: #4b5563;
+    }
+
+    /* Charts row */
+    .charts-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .chart-card {
+      background: #f9fafb;
+      border-radius: 14px;
+      padding: 10px;
+      border: 1px solid #e5e7eb;
+      /* constrain vertical size */
+      height: 230px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .chart-title {
+      font-size: 12px;
+      color: #111827;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chart-subtitle {
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+
+    .chart-inner {
+      flex: 1;
+      position: relative;
+      min-height: 120px;
+    }
+
+    .chart-inner canvas {
+      position: absolute;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
     }
 
     .page-footer {
@@ -321,7 +307,6 @@
                 Click any number to open a member list
               </div>
             </div>
-            <span class="badge">Section 1</span>
           </div>
 
           <div class="metrics-row">
@@ -354,7 +339,6 @@
                 Social, Health, Outreach & Housing composite score across the panel
               </div>
             </div>
-            <span class="badge">Section 2 · SDOH</span>
           </div>
 
           <div class="shoh-wrapper">
@@ -379,7 +363,6 @@
                 Click any count to open a member list in a new window
               </div>
             </div>
-            <span class="badge">Section 3 · Interop</span>
           </div>
 
           <div class="Interop-grid">
@@ -397,44 +380,31 @@
               </div>
             </div>
 
+            <!-- Unmatched by Program, each as its own stat like Unmatched CCDAs -->
             <div class="interop-stat">
-              <div class="interop-label">Unmatched by Program</div>
-              <div class="interop-chip-row">
-                <span class="interop-chip" data-control="prog-medicare">
-                  Medicare: 312
-                </span>
-                <span class="interop-chip" data-control="prog-aca">
-                  ACA: 289
-                </span>
-                <span class="interop-chip" data-control="prog-medicaid">
-                  Medicaid: 775
-                </span>
+              <div class="interop-label">Unmatched Medicare</div>
+              <div class="interop-value" data-control="prog-medicare">
+                312
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched ACA</div>
+              <div class="interop-value" data-control="prog-aca">
+                289
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched Medicaid</div>
+              <div class="interop-value" data-control="prog-medicaid">
+                775
               </div>
             </div>
           </div>
         </section>
 
-        <!-- ROW 4: Unmatched Patients full width -->
-        <section class="card col-span-12">
-          <div class="card-header">
-            <div>
-              <div class="card-title">Unmatched Patients</div>
-              <div class="card-subtitle">
-                Use KPIs above to open detailed member lists in separate windows
-              </div>
-            </div>
-            <span class="badge">Section 4 · Unmatched</span>
-          </div>
-
-          <div class="section-label">
-            Detailed member tables open in new windows; this section stays summary-only.
-          </div>
-          <p style="font-size:12px;color:#6b7280;margin-top:4px;">
-            Focus on members with recent movement, no encounters, or upcoming redeterminations.
-          </p>
-        </section>
-
-        <!-- ROW 5: Charts at bottom -->
+        <!-- ROW 4: Charts at bottom -->
         <section class="card col-span-12">
           <div class="card-header">
             <div>
@@ -443,7 +413,6 @@
                 Visual summary of movement and outreach attempts for the unmatched cohort
               </div>
             </div>
-            <span class="badge">Analytics</span>
           </div>
 
           <div class="charts-row">
@@ -454,8 +423,9 @@
               <div class="chart-subtitle">
                 Distribution across movement categories
               </div>
-              <!-- smaller pie chart -->
-              <canvas id="movementPie" height="110"></canvas>
+              <div class="chart-inner">
+                <canvas id="movementPie"></canvas>
+              </div>
             </div>
 
             <div class="chart-card">
@@ -465,7 +435,9 @@
               <div class="chart-subtitle">
                 Sample outreach attempts per category
               </div>
-              <canvas id="outreachBar" height="130"></canvas>
+              <div class="chart-inner">
+                <canvas id="outreachBar"></canvas>
+              </div>
             </div>
           </div>
         </section>
@@ -734,7 +706,7 @@
       doc.write("</body></html>");
     }
 
-    function attachPopupHandlers(win, rows) {
+    function attachPopupHandlers(win) {
       const doc = win.document;
       const backdrop = doc.getElementById("engageModalBackdrop");
       const titleEl = doc.getElementById("engageModalTitle");
@@ -802,7 +774,6 @@
           return;
         }
 
-        // Update attempts + last outreach in the table row
         const attemptsCell = currentRowEl.querySelector(".attempts-cell");
         const lastOutreachCell = currentRowEl.querySelector(".last-outreach-cell");
         const currentAttempts = parseInt(attemptsCell.textContent || "0", 10) || 0;
@@ -816,7 +787,6 @@
       }
 
       function exportCsv() {
-        // Build a CSV from the table
         const table = doc.querySelector("table");
         if (!table) return;
         const rowsEls = Array.from(table.querySelectorAll("tr"));
@@ -825,7 +795,6 @@
           return cells
             .map(td => {
               const text = td.innerText.replace(/\n/g, " ").trim();
-              // escape quotes
               return '"' + text.replace(/"/g, '""') + '"';
             })
             .join(",");
@@ -876,11 +845,10 @@
 
       buildPopupHTML(win.document, label, rows);
       win.document.close();
-      attachPopupHandlers(win, rows);
+      attachPopupHandlers(win);
     }
 
     function initKPIControls() {
-      // Section 1 tiles
       document.querySelectorAll(".metric-pill").forEach(function(pill) {
         const key = pill.getAttribute("data-control");
         pill.addEventListener("click", function() {
@@ -888,19 +856,10 @@
         });
       });
 
-      // Interop numeric values
       document.querySelectorAll(".interop-value").forEach(function(val) {
         const key = val.getAttribute("data-control");
         if (!key) return;
         val.addEventListener("click", function() {
-          openMemberWindow(key);
-        });
-      });
-
-      // Program chips
-      document.querySelectorAll(".interop-chip").forEach(function(chip) {
-        const key = chip.getAttribute("data-control");
-        chip.addEventListener("click", function() {
           openMemberWindow(key);
         });
       });
@@ -953,6 +912,7 @@
           ]
         },
         options: {
+          maintainAspectRatio: false,
           scales: {
             x: {
               ticks: { color: "#111827", font: { size: 11 } },
