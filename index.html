@@ -60,12 +60,12 @@
     }
 
     .card {
-      background: #020617;
-      color: #e5e7eb;
+      background: #ffffff; /* white cards on gray background */
+      color: #111827;
       border-radius: 18px;
       padding: 16px 18px;
-      border: 1px solid #1f2937;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      border: 1px solid #d1d5db;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
     }
 
     .card-header {
@@ -78,12 +78,12 @@
     .card-title {
       font-size: 16px;
       font-weight: 600;
-      color: #e5e7eb;
+      color: #111827;
     }
 
     .card-subtitle {
       font-size: 12px;
-      color: #9ca3af;
+      color: #6b7280;
       margin-top: 4px;
     }
 
@@ -91,8 +91,9 @@
       font-size: 11px;
       border-radius: 999px;
       padding: 4px 10px;
-      border: 1px solid #4b5563;
-      color: #d1d5db;
+      border: 1px solid #9ca3af;
+      color: #4b5563;
+      background: #f3f4f6;
     }
 
     .metrics-row {
@@ -104,20 +105,21 @@
     .metric-pill {
       padding: 10px 12px;
       border-radius: 14px;
-      background: #020617;
-      border: 1px solid #1f2937;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
       min-width: 140px;
       cursor: pointer;
       transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
     }
 
     .metric-pill:hover {
-      border-color: #4b5563;
+      border-color: #9ca3af;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
     }
 
     .metric-label {
       font-size: 11px;
-      color: #9ca3af;
+      color: #6b7280;
       margin-bottom: 4px;
       text-transform: uppercase;
       letter-spacing: 0.05em;
@@ -126,12 +128,13 @@
     .metric-value {
       font-size: 18px;
       font-weight: 600;
+      color: #111827;
     }
 
     .metric-trend {
       margin-top: 2px;
       font-size: 11px;
-      color: #6ee7b7;
+      color: #16a34a;
     }
 
     .Interop-grid {
@@ -145,13 +148,13 @@
     .interop-stat {
       padding: 8px 10px;
       border-radius: 12px;
-      background: #020617;
-      border: 1px solid #1f2937;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
     }
 
     .interop-label {
       font-size: 11px;
-      color: #9ca3af;
+      color: #6b7280;
       margin-bottom: 4px;
     }
 
@@ -160,11 +163,12 @@
       font-weight: 600;
       cursor: pointer;
       transition: color 0.15s ease;
+      color: #111827;
     }
 
     .interop-value:hover {
       text-decoration: underline;
-      color: #a5b4fc;
+      color: #2563eb;
     }
 
     .interop-chip-row {
@@ -178,19 +182,21 @@
       font-size: 10px;
       padding: 4px 8px;
       border-radius: 999px;
-      border: 1px dashed #374151;
-      color: #d1d5db;
+      border: 1px dashed #9ca3af;
+      color: #111827;
+      background: #f3f4f6;
       cursor: pointer;
       transition: border-color 0.15s ease, background 0.15s ease;
     }
 
     .interop-chip:hover {
-      border-color: #4b5563;
+      border-color: #2563eb;
+      background: #e0f2fe;
     }
 
     .section-label {
       font-size: 11px;
-      color: #9ca3af;
+      color: #6b7280;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 6px;
@@ -204,15 +210,15 @@
     }
 
     .chart-card {
-      background: #020617;
+      background: #f9fafb;
       border-radius: 14px;
       padding: 10px;
-      border: 1px solid #1f2937;
+      border: 1px solid #e5e7eb;
     }
 
     .chart-title {
       font-size: 12px;
-      color: #e5e7eb;
+      color: #111827;
       margin-bottom: 4px;
       display: flex;
       justify-content: space-between;
@@ -221,7 +227,7 @@
 
     .chart-subtitle {
       font-size: 11px;
-      color: #9ca3af;
+      color: #6b7280;
       margin-bottom: 6px;
     }
 
@@ -538,11 +544,177 @@
       }
     }
 
+    function buildPopupHTML(doc, label, rows) {
+      doc.write("<!DOCTYPE html>");
+      doc.write("<html lang='en'><head>");
+      doc.write("<meta charset='UTF-8' />");
+      doc.write("<title>" + label + "</title>");
+      doc.write("<style>");
+      doc.write("body{background:#e5e7eb;color:#111827;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:20px;}");
+      doc.write("h1{font-size:20px;margin-bottom:4px;color:#020617;}");
+      doc.write("p{font-size:12px;color:#4b5563;margin-bottom:16px;}");
+      doc.write(".table-wrapper{background:#ffffff;border-radius:12px;border:1px solid #d1d5db;overflow:auto;max-height:calc(100vh - 120px);}");
+      doc.write("table{width:100%;border-collapse:collapse;font-size:12px;}");
+      doc.write("th,td{padding:8px 10px;border-bottom:1px solid #e5e7eb;white-space:nowrap;text-align:left;}");
+      doc.write("th{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;background:#f9fafb;position:sticky;top:0;z-index:5;}");
+      doc.write("tr:nth-child(even) td{background:#f9fafb;}");
+      doc.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #d1d5db;background:#f3f4f6;}");
+      doc.write(".chip.medicaid{border-color:#22c55e;}");
+      doc.write(".chip.medicare{border-color:#38bdf8;}");
+      doc.write(".chip.aca{border-color:#f97316;}");
+      doc.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:#ecfdf5;color:#166534;font-size:11px;cursor:pointer;}");
+      doc.write(".engage-button:hover{background:#bbf7d0;}");
+      // Modal styles
+      doc.write(".modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;}");
+      doc.write(".modal{background:#ffffff;border-radius:14px;border:1px solid #d1d5db;max-width:520px;width:90%;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);}");
+      doc.write(".modal-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#020617;}");
+      doc.write(".modal-subtitle{font-size:12px;color:#4b5563;margin-bottom:10px;}");
+      doc.write(".modal-textarea{width:100%;min-height:120px;border-radius:10px;border:1px solid #d1d5db;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;}");
+      doc.write(".modal-textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 1px #2563eb33;}");
+      doc.write(".modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}");
+      doc.write(".btn-row{display:flex;gap:8px;}");
+      doc.write(".btn{padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid transparent;cursor:pointer;}");
+      doc.write(".btn-primary{background:#2563eb;color:#ffffff;border-color:#2563eb;}");
+      doc.write(".btn-primary:hover{background:#1d4ed8;}");
+      doc.write(".btn-secondary{background:#f3f4f6;color:#111827;border-color:#d1d5db;}");
+      doc.write(".btn-secondary:hover{background:#e5e7eb;}");
+      doc.write(".btn-ghost{background:transparent;color:#374151;border-color:#d1d5db;}");
+      doc.write(".btn-ghost:hover{background:#f3f4f6;}");
+      doc.write("</style>");
+      doc.write("</head><body>");
+
+      doc.write("<h1>" + label + "</h1>");
+      doc.write("<p>Sample member list driven by the KPI you clicked. Click Engage to draft a communication.</p>");
+
+      doc.write("<div class='table-wrapper'>");
+      doc.write("<table><thead><tr>");
+      doc.write("<th>Member Name</th>");
+      doc.write("<th>Member ID</th>");
+      doc.write("<th>Enrollment Date</th>");
+      doc.write("<th>Redetermination Date</th>");
+      doc.write("<th>County</th>");
+      doc.write("<th>Health Plan</th>");
+      doc.write("<th>PCP</th>");
+      doc.write("<th>Movement Type</th>");
+      doc.write("<th>Program</th>");
+      doc.write("<th>Engage</th>");
+      doc.write("</tr></thead><tbody>");
+
+      rows.forEach(function(m) {
+        doc.write("<tr>");
+        doc.write("<td>" + m.name + "</td>");
+        doc.write("<td>" + m.id + "</td>");
+        doc.write("<td>" + m.enrollmentDate + "</td>");
+        doc.write("<td>" + m.redeterminationDate + "</td>");
+        doc.write("<td>" + m.county + "</td>");
+        doc.write("<td>" + m.plan + "</td>");
+        doc.write("<td>" + m.pcp + "</td>");
+        doc.write("<td>" + m.movementType + "</td>");
+        doc.write("<td><span class='chip " + m.program.toLowerCase() + "'>" + m.program + "</span></td>");
+        if (m.program === "Medicaid") {
+          doc.write(
+            "<td><button class='engage-button' " +
+            "data-member-name='" + m.name.replace(/'/g, "&apos;") + "' " +
+            "data-member-id='" + m.id.replace(/'/g, "&apos;") + "' " +
+            "data-member-plan='" + m.plan.replace(/'/g, "&apos;") + "' " +
+            "data-member-county='" + m.county.replace(/'/g, "&apos;") + "' " +
+            "data-member-movement='" + m.movementType.replace(/'/g, "&apos;") + "'>Engage</button></td>"
+          );
+        } else {
+          doc.write("<td><span style='font-size:11px;color:#6b7280;'>N/A</span></td>");
+        }
+        doc.write("</tr>");
+      });
+
+      doc.write("</tbody></table></div>");
+
+      // Modal container
+      doc.write("<div class='modal-backdrop' id='engageModalBackdrop'>");
+      doc.write("  <div class='modal'>");
+      doc.write("    <div class='modal-title' id='engageModalTitle'>Engage Member</div>");
+      doc.write("    <div class='modal-subtitle' id='engageModalSubtitle'></div>");
+      doc.write("    <textarea id='engageMessage' class='modal-textarea' placeholder='Type your message here...'></textarea>");
+      doc.write("    <div class='modal-footer'>");
+      doc.write("      <button class='btn btn-ghost' id='generateChatGPT'>Generate with ChatGPT</button>");
+      doc.write("      <div class='btn-row'>");
+      doc.write("        <button class='btn btn-secondary' id='cancelEngage'>Cancel</button>");
+      doc.write("        <button class='btn btn-primary' id='sendEngage'>Send</button>");
+      doc.write("      </div>");
+      doc.write("    </div>");
+      doc.write("  </div>");
+      doc.write("</div>");
+
+      doc.write("</body></html>");
+    }
+
+    function attachPopupHandlers(win) {
+      const doc = win.document;
+      const backdrop = doc.getElementById("engageModalBackdrop");
+      const titleEl = doc.getElementById("engageModalTitle");
+      const subtitleEl = doc.getElementById("engageModalSubtitle");
+      const msgEl = doc.getElementById("engageMessage");
+      const btnGenerate = doc.getElementById("generateChatGPT");
+      const btnCancel = doc.getElementById("cancelEngage");
+      const btnSend = doc.getElementById("sendEngage");
+      let currentMemberName = null;
+
+      function openModalForButton(btn) {
+        const name = btn.getAttribute("data-member-name");
+        const id = btn.getAttribute("data-member-id");
+        const plan = btn.getAttribute("data-member-plan");
+        const county = btn.getAttribute("data-member-county");
+        const movement = btn.getAttribute("data-member-movement");
+        currentMemberName = name;
+        titleEl.textContent = "Engage " + name;
+        subtitleEl.textContent = "Member ID " + id + " · Plan " + plan + " · " + county + " · " + movement;
+        msgEl.value = "";
+        backdrop.style.display = "flex";
+      }
+
+      function closeModal() {
+        backdrop.style.display = "none";
+      }
+
+      function generateChatGPTMessage() {
+        if (!currentMemberName) return;
+        let base = "Hello " + currentMemberName + ",\n\n";
+        base += "We are reaching out from your care team to ensure you stay covered and connected to care. ";
+        base += "If you have recently moved, had a change in your coverage, or have not seen your provider in a while, we can help review your Medicaid benefits and schedule any needed appointments.\n\n";
+        base += "You can call us at (XXX) XXX-XXXX or reply to this message so we can support you.\n\n";
+        base += "Thank you,\nYour Care Coordination Team";
+        msgEl.value = base;
+      }
+
+      function sendMessage() {
+        if (!currentMemberName) {
+          closeModal();
+          return;
+        }
+        closeModal();
+        win.alert("Communication Sent to " + currentMemberName);
+      }
+
+      if (btnGenerate) btnGenerate.addEventListener("click", generateChatGPTMessage);
+      if (btnCancel) btnCancel.addEventListener("click", closeModal);
+      if (btnSend) btnSend.addEventListener("click", sendMessage);
+      if (backdrop) {
+        backdrop.addEventListener("click", function(e) {
+          if (e.target === backdrop) closeModal();
+        });
+      }
+
+      const engageButtons = doc.querySelectorAll(".engage-button");
+      engageButtons.forEach(function(btn) {
+        btn.addEventListener("click", function() {
+          openModalForButton(btn);
+        });
+      });
+    }
+
     function openMemberWindow(key) {
       const label = labelForKey(key);
       const rows = getFilteredMembers(key);
 
-      // Try to open "maximized" (fills available screen)
       const width = window.screen.availWidth || 1200;
       const height = window.screen.availHeight || 800;
       const specs = "left=0,top=0,width=" + width + ",height=" + height;
@@ -553,160 +725,10 @@
         return;
       }
 
-      // Build HTML for popup with Engage modal
-      win.document.write("<!DOCTYPE html>");
-      win.document.write("<html lang='en'><head>");
-      win.document.write("<meta charset='UTF-8' />");
-      win.document.write("<title>" + label + "</title>");
-      win.document.write("<style>");
-      win.document.write("body{background:#e5e7eb;color:#111827;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:20px;}");
-      win.document.write("h1{font-size:20px;margin-bottom:4px;color:#020617;}");
-      win.document.write("p{font-size:12px;color:#4b5563;margin-bottom:16px;}");
-      win.document.write(".table-wrapper{background:#ffffff;border-radius:12px;border:1px solid #d1d5db;overflow:auto;max-height:calc(100vh - 120px);}");
-      win.document.write("table{width:100%;border-collapse:collapse;font-size:12px;}");
-      win.document.write("th,td{padding:8px 10px;border-bottom:1px solid #e5e7eb;white-space:nowrap;text-align:left;}");
-      win.document.write("th{font-size:11px;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;background:#f9fafb;position:sticky;top:0;z-index:5;}");
-      win.document.write("tr:nth-child(even) td{background:#f9fafb;}");
-      win.document.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #d1d5db;background:#f3f4f6;}");
-      win.document.write(".chip.medicaid{border-color:#22c55e;}");
-      win.document.write(".chip.medicare{border-color:#38bdf8;}");
-      win.document.write(".chip.aca{border-color:#f97316;}");
-      win.document.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:#ecfdf5;color:#166534;font-size:11px;cursor:pointer;}");
-      win.document.write(".engage-button:hover{background:#bbf7d0;}");
-      // Modal styles
-      win.document.write(".modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,0.55);display:none;align-items:center;justify-content:center;}");
-      win.document.write(".modal{background:#ffffff;border-radius:14px;border:1px solid #d1d5db;max-width:520px;width:90%;padding:16px 18px;box-shadow:0 10px 30px rgba(0,0,0,0.25);}");
-      win.document.write(".modal-title{font-size:16px;font-weight:600;margin-bottom:6px;color:#020617;}");
-      win.document.write(".modal-subtitle{font-size:12px;color:#4b5563;margin-bottom:10px;}");
-      win.document.write(".modal-textarea{width:100%;min-height:120px;border-radius:10px;border:1px solid #d1d5db;padding:8px 10px;font-size:13px;font-family:inherit;resize:vertical;}");
-      win.document.write(".modal-textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 1px #2563eb33;}");
-      win.document.write(".modal-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}");
-      win.document.write(".btn-row{display:flex;gap:8px;}");
-      win.document.write(".btn{padding:6px 12px;border-radius:999px;font-size:12px;border:1px solid transparent;cursor:pointer;}");
-      win.document.write(".btn-primary{background:#2563eb;color:#ffffff;border-color:#2563eb;}");
-      win.document.write(".btn-primary:hover{background:#1d4ed8;}");
-      win.document.write(".btn-secondary{background:#f3f4f6;color:#111827;border-color:#d1d5db;}");
-      win.document.write(".btn-secondary:hover{background:#e5e7eb;}");
-      win.document.write(".btn-ghost{background:transparent;color:#374151;border-color:#d1d5db;}");
-      win.document.write(".btn-ghost:hover{background:#f3f4f6;}");
-      win.document.write("</style>");
-      win.document.write("</head><body>");
-
-      win.document.write("<h1>" + label + "</h1>");
-      win.document.write("<p>Sample member list driven by the KPI you clicked. Click Engage to draft a communication.</p>");
-
-      // Table wrapper
-      win.document.write("<div class='table-wrapper'>");
-      win.document.write("<table><thead><tr>");
-      win.document.write("<th>Member Name</th>");
-      win.document.write("<th>Member ID</th>");
-      win.document.write("<th>Enrollment Date</th>");
-      win.document.write("<th>Redetermination Date</th>");
-      win.document.write("<th>County</th>");
-      win.document.write("<th>Health Plan</th>");
-      win.document.write("<th>PCP</th>");
-      win.document.write("<th>Movement Type</th>");
-      win.document.write("<th>Program</th>");
-      win.document.write("<th>Engage</th>");
-      win.document.write("</tr></thead><tbody>");
-
-      rows.forEach(function(m) {
-        win.document.write("<tr>");
-        win.document.write("<td>" + m.name + "</td>");
-        win.document.write("<td>" + m.id + "</td>");
-        win.document.write("<td>" + m.enrollmentDate + "</td>");
-        win.document.write("<td>" + m.redeterminationDate + "</td>");
-        win.document.write("<td>" + m.county + "</td>");
-        win.document.write("<td>" + m.plan + "</td>");
-        win.document.write("<td>" + m.pcp + "</td>");
-        win.document.write("<td>" + m.movementType + "</td>");
-        win.document.write("<td><span class='chip " + m.program.toLowerCase() + "'>" + m.program + "</span></td>");
-        if (m.program === "Medicaid") {
-          win.document.write(
-            "<td><button class='engage-button' " +
-            "data-member-name='" + m.name.replace(/'/g, "&apos;") + "' " +
-            "data-member-id='" + m.id.replace(/'/g, "&apos;") + "' " +
-            "data-member-plan='" + m.plan.replace(/'/g, "&apos;") + "' " +
-            "data-member-county='" + m.county.replace(/'/g, "&apos;") + "' " +
-            "data-member-movement='" + m.movementType.replace(/'/g, "&apos;") + "'>Engage</button></td>"
-          );
-        } else {
-          win.document.write("<td><span style='font-size:11px;color:#6b7280;'>N/A</span></td>");
-        }
-        win.document.write("</tr>");
-      });
-
-      win.document.write("</tbody></table></div>");
-
-      // Modal structure
-      win.document.write("<div class='modal-backdrop' id='engageModalBackdrop'>");
-      win.document.write("  <div class='modal'>");
-      win.document.write("    <div class='modal-title' id='engageModalTitle'>Engage Member</div>");
-      win.document.write("    <div class='modal-subtitle' id='engageModalSubtitle'></div>");
-      win.document.write("    <textarea id='engageMessage' class='modal-textarea' placeholder='Type your message here...'></textarea>");
-      win.document.write("    <div class='modal-footer'>");
-      win.document.write("      <button class='btn btn-ghost' id='generateChatGPT'>Generate with ChatGPT</button>");
-      win.document.write("      <div class='btn-row'>");
-      win.document.write("        <button class='btn btn-secondary' id='cancelEngage'>Cancel</button>");
-      win.document.write("        <button class='btn btn-primary' id='sendEngage'>Send</button>");
-      win.document.write("      </div>");
-      win.document.write("    </div>");
-      win.document.write("  </div>");
-      win.document.write("</div>");
-
-      // Script inside popup for modal interaction
-      win.document.write("<script>");
-      win.document.write("  (function(){");
-      win.document.write("    var backdrop = document.getElementById('engageModalBackdrop');");
-      win.document.write("    var titleEl = document.getElementById('engageModalTitle');");
-      win.document.write("    var subtitleEl = document.getElementById('engageModalSubtitle');");
-      win.document.write("    var msgEl = document.getElementById('engageMessage');");
-      win.document.write("    var currentMemberName = null;");
-      win.document.write("    function openModalForButton(btn){");
-      win.document.write("      var name = btn.getAttribute('data-member-name');");
-      win.document.write("      var id = btn.getAttribute('data-member-id');");
-      win.document.write("      var plan = btn.getAttribute('data-member-plan');");
-      win.document.write("      var county = btn.getAttribute('data-member-county');");
-      win.document.write("      var movement = btn.getAttribute('data-member-movement');");
-      win.document.write("      currentMemberName = name;");
-      win.document.write("      titleEl.textContent = 'Engage ' + name;");
-      win.document.write("      subtitleEl.textContent = 'Member ID ' + id + ' · Plan ' + plan + ' · ' + county + ' · ' + movement;");
-      win.document.write("      msgEl.value = '';");
-      win.document.write("      backdrop.style.display = 'flex';");
-      win.document.write("    }");
-      win.document.write("    function closeModal(){");
-      win.document.write("      backdrop.style.display = 'none';");
-      win.document.write("    }");
-      win.document.write("    function generateChatGPTMessage(){");
-      win.document.write("      if(!currentMemberName){ return; }");
-      win.document.write("      // Simple local generation mimicking ChatGPT, based on member context");
-      win.document.write("      var base = 'Hello ' + currentMemberName + ',\\n\\n';");
-      win.document.write("      base += 'We are reaching out from your care team to ensure you stay covered and connected to care. ';");
-      win.document.write("      base += 'If you have recently moved, had a change in your coverage, or have not seen your provider in a while, we can help review your Medicaid benefits and schedule any needed appointments.\\n\\n';");
-      win.document.write("      base += 'You can call us at (XXX) XXX-XXXX or reply to this message so we can support you.\\n\\n';");
-      win.document.write("      base += 'Thank you,\\nYour Care Coordination Team';");
-      win.document.write("      msgEl.value = base;");
-      win.document.write("    }");
-      win.document.write("    function sendMessage(){");
-      win.document.write("      if(!currentMemberName){ closeModal(); return; }");
-      win.document.write("      closeModal();");
-      win.document.write("      var msg = 'Communication Sent to ' + currentMemberName; ");
-      win.document.write("      alert(msg);");
-      win.document.write("    }");
-      win.document.write("    document.getElementById('generateChatGPT').addEventListener('click', function(){ generateChatGPTMessage(); });");
-      win.document.write("    document.getElementById('cancelEngage').addEventListener('click', function(){ closeModal(); });");
-      win.document.write("    document.getElementById('sendEngage').addEventListener('click', function(){ sendMessage(); });");
-      win.document.write("    backdrop.addEventListener('click', function(e){ if(e.target === backdrop){ closeModal(); } });");
-      win.document.write("    // Attach to all engage buttons");
-      win.document.write("    var engageButtons = document.querySelectorAll('.engage-button');");
-      win.document.write("    engageButtons.forEach(function(btn){");
-      win.document.write("      btn.addEventListener('click', function(){ openModalForButton(btn); });");
-      win.document.write("    });");
-      win.document.write("  })();");
-      win.document.write("<\/script>");
-
-      win.document.write("</body></html>");
+      buildPopupHTML(win.document, label, rows);
       win.document.close();
+      // Attach handlers after document is ready
+      attachPopupHandlers(win);
     }
 
     function initKPIControls() {
@@ -760,7 +782,7 @@
           plugins: {
             legend: {
               labels: {
-                color: "#e5e7eb",
+                color: "#111827",
                 font: { size: 11 }
               }
             }
@@ -784,12 +806,12 @@
         options: {
           scales: {
             x: {
-              ticks: { color: "#e5e7eb", font: { size: 11 } },
+              ticks: { color: "#111827", font: { size: 11 } },
               grid: { display: false }
             },
             y: {
-              ticks: { color: "#9ca3af", font: { size: 10 } },
-              grid: { color: "#1f2937" }
+              ticks: { color: "#6b7280", font: { size: 10 } },
+              grid: { color: "#e5e7eb" }
             }
           },
           plugins: {
