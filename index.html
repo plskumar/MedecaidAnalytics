@@ -86,3 +86,480 @@
     .badge {
       font-size: 11px;
       border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid #4b5563;
+      color: #d1d5db;
+    }
+
+    .metrics-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .metric-pill {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #020617;
+      border: 1px solid #1f2937;
+      min-width: 140px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    .metric-pill:hover {
+      border-color: #4b5563;
+    }
+
+    .metric-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .metric-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .metric-trend {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #6ee7b7;
+    }
+
+    .Interop-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+      margin-bottom: 10px;
+    }
+
+    .interop-stat {
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: #020617;
+      border: 1px solid #1f2937;
+    }
+
+    .interop-label {
+      font-size: 11px;
+      color: #9ca3af;
+      margin-bottom: 4px;
+    }
+
+    .interop-value {
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.15s ease;
+    }
+
+    .interop-value:hover {
+      text-decoration: underline;
+      color: #a5b4fc;
+    }
+
+    .interop-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .interop-chip {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px dashed #374151;
+      color: #d1d5db;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+
+    .interop-chip:hover {
+      border-color: #4b5563;
+    }
+
+    .section-label {
+      font-size: 11px;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .page-footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: #6b7280;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .page-footer span.highlight {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    @media (max-width: 1024px) {
+      .grid {
+        grid-template-columns: repeat(1, minmax(0,1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .col-span-4 { grid-column: span 4 / span 4; }
+      .col-span-8 { grid-column: span 8 / span 8; }
+      .col-span-12 { grid-column: span 12 / span 12; }
+    }
+
+    @media (max-width: 1023px) {
+      .col-span-4,
+      .col-span-8,
+      .col-span-12 {
+        grid-column: span 12 / span 12;
+      }
+      .banner {
+        height: 180px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <header>
+      <div class="banner"></div>
+    </header>
+
+    <main class="content">
+      <h1 class="page-title">Medicaid Member Dashboard</h1>
+
+      <div class="grid">
+        <!-- Section 1 -->
+        <section class="card col-span-4">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Assigned Medicaid Membership</div>
+              <div class="card-subtitle">
+                Click any number to open a member list
+              </div>
+            </div>
+            <span class="badge">Section 1</span>
+          </div>
+
+          <div class="metrics-row">
+            <div class="metric-pill" data-control="total">
+              <div class="metric-label">Total Members</div>
+              <div class="metric-value">12,457</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+
+            <div class="metric-pill" data-control="enc30">
+              <div class="metric-label">% with Encounters (30d)</div>
+              <div class="metric-value">68.4%</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+
+            <div class="metric-pill" data-control="red90">
+              <div class="metric-label">90d Redeterminations</div>
+              <div class="metric-value">842</div>
+              <div class="metric-trend">Click to open members</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 2 -->
+        <section class="card col-span-8">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Interop Statistics</div>
+              <div class="card-subtitle">
+                Click any count below to open a member list in a new window
+              </div>
+            </div>
+            <span class="badge">Section 2</span>
+          </div>
+
+          <div class="Interop-grid">
+            <div class="interop-stat">
+              <div class="interop-label">Total Unique CCDAs</div>
+              <div class="interop-value" data-control="ccda-total">
+                15,893
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched CCDAs</div>
+              <div class="interop-value" data-control="ccda-unmatched">
+                1,376
+              </div>
+            </div>
+
+            <div class="interop-stat">
+              <div class="interop-label">Unmatched by Program</div>
+              <div class="interop-chip-row">
+                <span class="interop-chip" data-control="prog-medicare">
+                  Medicare: 312
+                </span>
+                <span class="interop-chip" data-control="prog-aca">
+                  ACA: 289
+                </span>
+                <span class="interop-chip" data-control="prog-medicaid">
+                  Medicaid: 775
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-label">
+            Lists are shown in a new window when you click the KPIs above
+          </div>
+        </section>
+
+        <!-- Section 3 -->
+        <section class="card col-span-4">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Aggregate SHOH Index</div>
+              <div class="card-subtitle">
+                Social, Health, Outreach & Housing composite score
+              </div>
+            </div>
+            <span class="badge">Section 3</span>
+          </div>
+          <div class="metrics-row">
+            <div class="metric-pill">
+              <div class="metric-label">Current SHOH Index</div>
+              <div class="metric-value">73%</div>
+              <div class="metric-trend">Stable vs last quarter</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4 -->
+        <section class="card col-span-8">
+          <div class="card-header">
+            <div>
+              <div class="card-title">Unmatched Patients</div>
+              <div class="card-subtitle">
+                Use KPIs above to open detailed lists in separate windows
+              </div>
+            </div>
+            <span class="badge">Section 4</span>
+          </div>
+
+          <div class="section-label">
+            No member table on this page – all details open in their own window
+          </div>
+        </section>
+      </div>
+
+      <footer class="page-footer">
+        <span>
+          <span class="highlight">Tip:</span> Click any KPI or count to open a detailed member list for outreach and review.
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    // Mock member data
+    const members = [
+      {
+        id: "M001",
+        name: "Ana Rodriguez",
+        enrollmentDate: "2023-04-12",
+        redeterminationDate: "2025-02-18",
+        county: "King",
+        plan: "Medicaid",
+        pcp: "Dr. Chang",
+        movementType: "Moved out of County",
+        program: "Medicaid",
+        outreachAttempts: 2,
+      },
+      {
+        id: "M002",
+        name: "James Clark",
+        enrollmentDate: "2022-11-03",
+        redeterminationDate: "2025-01-07",
+        county: "Pierce",
+        plan: "Medicaid",
+        pcp: "Dr. Shah",
+        movementType: "No Encounter Yet",
+        program: "Medicaid",
+        outreachAttempts: 1,
+      },
+      {
+        id: "M003",
+        name: "Maria Lopez",
+        enrollmentDate: "2024-02-19",
+        redeterminationDate: "2025-03-01",
+        county: "Snohomish",
+        plan: "Medicaid",
+        pcp: "Dr. Patel",
+        movementType: "Moved out of Network",
+        program: "Medicaid",
+        outreachAttempts: 3,
+      },
+      {
+        id: "M004",
+        name: "Robert Hill",
+        enrollmentDate: "2021-09-30",
+        redeterminationDate: "2025-04-10",
+        county: "King",
+        plan: "Medicare",
+        pcp: "Dr. Green",
+        movementType: "No Encounter Yet",
+        program: "Medicare",
+        outreachAttempts: 0,
+      },
+      {
+        id: "M005",
+        name: "Wei Chen",
+        enrollmentDate: "2023-07-11",
+        redeterminationDate: "2025-02-03",
+        county: "Pierce",
+        plan: "ACA",
+        pcp: "Dr. Singh",
+        movementType: "Moved out of County",
+        program: "ACA",
+        outreachAttempts: 1,
+      },
+    ];
+
+    function getFilteredMembers(key) {
+      // Simple demo filters – adjust as needed
+      if (key === "prog-medicare") {
+        return members.filter((m) => m.program === "Medicare");
+      }
+      if (key === "prog-aca") {
+        return members.filter((m) => m.program === "ACA");
+      }
+      if (key === "prog-medicaid") {
+        return members.filter((m) => m.program === "Medicaid");
+      }
+      // For all other KPIs, just show all members as a sample
+      return members;
+    }
+
+    function labelForKey(key) {
+      switch (key) {
+        case "total":
+          return "Total assigned Medicaid members";
+        case "enc30":
+          return "Members with encounters in last 30 days (sample)";
+        case "red90":
+          return "Members with redetermination in next 90 days (sample)";
+        case "ccda-total":
+          return "Members associated with unique CCDAs (sample)";
+        case "ccda-unmatched":
+          return "Members associated with unmatched CCDAs (sample)";
+        case "prog-medicare":
+          return "Unmatched Medicare members (sample)";
+        case "prog-aca":
+          return "Unmatched ACA members (sample)";
+        case "prog-medicaid":
+          return "Unmatched Medicaid members (sample)";
+        default:
+          return "Member list";
+      }
+    }
+
+    function openMemberWindow(key) {
+      const label = labelForKey(key);
+      const rows = getFilteredMembers(key);
+
+      const win = window.open("", "_blank", "width=1100,height=700");
+      if (!win) {
+        alert("Popup blocked. Please allow popups for this site.");
+        return;
+      }
+
+      win.document.write("<!DOCTYPE html>");
+      win.document.write("<html lang='en'><head>");
+      win.document.write("<meta charset='UTF-8' />");
+      win.document.write("<title>" + label + "</title>");
+      win.document.write("<style>");
+      win.document.write("body{background:#020617;color:#e5e7eb;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;margin:0;padding:20px;}");
+      win.document.write("h1{font-size:20px;margin-bottom:4px;}");
+      win.document.write("p{font-size:12px;color:#9ca3af;margin-bottom:16px;}");
+      win.document.write("table{width:100%;border-collapse:collapse;font-size:12px;}");
+      win.document.write("th,td{padding:8px 10px;border-bottom:1px solid #1f2937;white-space:nowrap;text-align:left;}");
+      win.document.write("th{font-size:11px;color:#9ca3af;text-transform:uppercase;letter-spacing:0.05em;background:#020617;}");
+      win.document.write("tr:nth-child(even) td{background:#020617;}");
+      win.document.write(".chip{display:inline-flex;padding:4px 8px;border-radius:999px;font-size:11px;border:1px solid #374151;background:#020617;}");
+      win.document.write(".chip.medicaid{border-color:#22c55e;}");
+      win.document.write(".chip.medicare{border-color:#38bdf8;}");
+      win.document.write(".chip.aca{border-color:#f97316;}");
+      win.document.write(".engage-button{padding:5px 10px;border-radius:999px;border:1px solid #22c55e;background:transparent;color:#bbf7d0;font-size:11px;cursor:pointer;}");
+      win.document.write("</style>");
+      win.document.write("</head><body>");
+
+      win.document.write("<h1>" + label + "</h1>");
+      win.document.write("<p>Sample member list driven by the KPI you clicked.</p>");
+
+      win.document.write("<table><thead><tr>");
+      win.document.write("<th>Member Name</th>");
+      win.document.write("<th>Member ID</th>");
+      win.document.write("<th>Enrollment Date</th>");
+      win.document.write("<th>Redetermination Date</th>");
+      win.document.write("<th>County</th>");
+      win.document.write("<th>Health Plan</th>");
+      win.document.write("<th>PCP</th>");
+      win.document.write("<th>Movement Type</th>");
+      win.document.write("<th>Program</th>");
+      win.document.write("<th>Engage</th>");
+      win.document.write("</tr></thead><tbody>");
+
+      rows.forEach((m) => {
+        win.document.write("<tr>");
+        win.document.write("<td>" + m.name + "</td>");
+        win.document.write("<td>" + m.id + "</td>");
+        win.document.write("<td>" + m.enrollmentDate + "</td>");
+        win.document.write("<td>" + m.redeterminationDate + "</td>");
+        win.document.write("<td>" + m.county + "</td>");
+        win.document.write("<td>" + m.plan + "</td>");
+        win.document.write("<td>" + m.pcp + "</td>");
+        win.document.write("<td>" + m.movementType + "</td>");
+        win.document.write("<td><span class='chip " + m.program.toLowerCase() + "'>" + m.program + "</span></td>");
+        if (m.program === "Medicaid") {
+          win.document.write("<td><button class='engage-button'>Engage</button></td>");
+        } else {
+          win.document.write("<td><span style='font-size:11px;color:#6b7280;'>N/A</span></td>");
+        }
+        win.document.write("</tr>");
+      });
+
+      win.document.write("</tbody></table>");
+      win.document.write("</body></html>");
+      win.document.close();
+    }
+
+    function initKPIControls() {
+      document.querySelectorAll(".metric-pill").forEach((pill) => {
+        const key = pill.getAttribute("data-control");
+        pill.addEventListener("click", () => openMemberWindow(key));
+      });
+
+      document.querySelectorAll(".interop-value").forEach((val) => {
+        const key = val.getAttribute("data-control");
+        if (!key) return;
+        val.addEventListener("click", () => openMemberWindow(key));
+      });
+
+      document.querySelectorAll(".interop-chip").forEach((chip) => {
+        const key = chip.getAttribute("data-control");
+        chip.addEventListener("click", () => openMemberWindow(key));
+      });
+    }
+
+    initKPIControls();
+  </script>
+</body>
+</html>
